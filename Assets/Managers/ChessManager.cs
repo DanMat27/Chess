@@ -47,7 +47,7 @@ public class ChessManager : MonoBehaviour
         // First, create chess board
         double x = 3.5;
         double y = -0.5;
-        Instantiate(board, new Vector3((float)x, (float)y, 0), Quaternion.identity);
+        Instantiate(board, new Vector3((float)x, (float)y, 1), Quaternion.identity);
 
         // Then, put all the pieces on the board
         x = 0;
@@ -56,12 +56,22 @@ public class ChessManager : MonoBehaviour
             print("I am white");
             foreach (int square in squares_b_w) {
                 drawPieces(square, x, y);
+                x = x + 1;
+                if (x % 8 == 0){ 
+                    x = 0;
+                    y = y - 1;
+                }
             }
         }
         else {
             print("I am black");
             foreach (int square in squares_w_b) {
                 drawPieces(square, x, y);
+                x = x + 1;
+                if (x % 8 == 0){ 
+                    x = 0;
+                    y = y - 1;
+                }
             }
         }
     }
