@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2052504056720652163
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2052504056720652189}
+  - component: {fileID: 2052504056720652188}
+  m_Layer: 0
+  m_Name: ChessManager
+  m_TagString: GameController
+  m_Icon: {fileID: 7250588514170254948, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2052504056720652189
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2052504056720652163}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2052504056720652188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2052504056720652163}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3a4583c2096ca74fb5af6bcc5bb1bc3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  board: {fileID: 7649933268023478003, guid: cd6780099120cac4d888f27a9dd05b4d, type: 3}
+  pawn_w: {fileID: 5015029408266619577, guid: 3012d5fa295880b4f8ac885fec04c3c1, type: 3}
+  pawn_b: {fileID: 6498013801951340695, guid: 30ef48588b7578b4baf2bcfa01c2bbe7, type: 3}
+  horse_w: {fileID: 964979329796613404, guid: b6802ae5c3188e44b88f99977348343c, type: 3}
+  horse_b: {fileID: 1329629791418845977, guid: c25e14887acef26489875babf0a97c25, type: 3}
+  bishop_w: {fileID: 3682009236953443248, guid: 848db0a3762c19947b24d156f84c5f38, type: 3}
+  bishop_b: {fileID: 5663040274365738751, guid: e34dcdd1dbcb57e49a449b29f6e17df0, type: 3}
+  tower_w: {fileID: 2870834957779117577, guid: 275d6179052eac74cbcdeca0f2cb6436, type: 3}
+  tower_b: {fileID: 4988674473506029349, guid: 94894b90119309148bfbcea6bbb3f3c6, type: 3}
+  queen_w: {fileID: 6413511233330065125, guid: d3c884053344d134ea027162410095a1, type: 3}
+  queen_b: {fileID: 3969761833976753207, guid: 47c70d41a9a007b4889754d9eb4b3ee9, type: 3}
+  king_w: {fileID: 8397648770481757015, guid: bf85ab3b01ed4c2409baef949f1006f4, type: 3}
+  king_b: {fileID: 4132380923485227925, guid: a4d31cbca618c1047bcd9167f1fadbb8, type: 3}
+  userColor: 1
