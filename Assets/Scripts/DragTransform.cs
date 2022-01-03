@@ -1,17 +1,32 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class DragTransform : MonoBehaviour
 {
-    bool isDraggable;
-    bool isDragging;
     Collider2D objectCollider;
+    private bool isDraggable; // true = piece can be dragged
+    private bool isDragging; // true = piece is being dragged
+    private float curX; // Current x position (before applying movement)
+    private float curY; // Current y position (before applying movement)
+    
+    /* Board limits */
+    public float boundX1 = (float)-0.5;
+    public float boundX2 = (float)7.5;
+    public float boundY1 = (float)-7.5;
+    public float boundY2 = (float)0.5;
+
+    /* Sounds */
+    private AudioSource audioSource;
+    public AudioClip soundClip;
 
     // Start is called before the first frame update
     void Start()
     {
         objectCollider = GetComponent<Collider2D>();
+        audioSource = GetComponent<AudioSource>();
+        audioSource.clip = soundClip;
         isDraggable = false;
         isDragging = false;
     }
@@ -22,11 +37,14 @@ public class DragTransform : MonoBehaviour
         DragAndDrop();
     }
 
-    void DragAndDrop()
+    // Controls drag and drop movement of the piece
+    private void DragAndDrop()
     {
+        // Take mouse cursor position
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        if (Input.GetMouseButtonDown(0)) {
+        // When user drags the piece
+        if (Input.GetMouseButtonDown(0) && !isDragging) {
             if(objectCollider == Physics2D.OverlapPoint(mousePosition)) {
                 isDraggable = true;
             }
@@ -39,13 +57,60 @@ public class DragTransform : MonoBehaviour
             }
         }
 
+        // Apply live movement to the dragged piece
         if (isDragging) {
             this.transform.position = mousePosition;
         }
 
-        if (Input.GetMouseButtonUp(0)) {
+        // When user drops the piece
+        if (Input.GetMouseButtonUp(0) && isDragging) {
             isDraggable = false;
             isDragging = false;
+
+            // If piece outside of board limits, apply position before movement
+            if (outOfBounds(mousePosition.x, mousePosition.y)) {
+                this.transform.position = new Vector2(curX, curY);
+                return;
+            }
+
+            // TODO: VER SI EL USUARIO PUEDE REALIZAR EL MOVIMIENTO. SI NO, VOLVER A POSICION INICIAL
+            
+            // Apply movement
+            ApplyAproxPiecePosition(mousePosition.x, mousePosition.y);
         }
+    }
+
+    // Returns true if position is out of board bounds
+    private bool outOfBounds(float x, float y)
+    {
+        if ((x < boundX1 || x > boundX2) || (y < boundY1 || y > boundY2)) {
+            this.transform.position = new Vector2(curX, curY);
+            return true;
+        }
+        return false;
+    }
+
+    // Applies new position coords doing an approximation to center the piece
+    private void ApplyAproxPiecePosition(float x, float y)
+    {
+        curX = (float)Math.Round(x);
+        curY = (float)Math.Round(y);
+        this.transform.position = new Vector2(curX, curY);
+        PlaySound(audioSource);
+    }
+
+    /* Cambia la pieza de sonido del AudioSource */
+    private void PlaySound(AudioSource audioSource)
+    {   
+        audioSource.Stop();
+        audioSource.Play();
+    }
+
+    // Changes current position of piece externally
+    public void SetCurPosition(float x, float y)
+    {
+        if (outOfBounds(x, y)) return;
+        curX = x;
+        curY = y;
     }
 }

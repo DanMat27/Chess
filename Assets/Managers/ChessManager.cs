@@ -86,41 +86,45 @@ public class ChessManager : MonoBehaviour
        White = Even, Black = Odd */
     void drawPieces(int num, double x, double y)
     {
+        GameObject o = null;
+        // Instantiates pieces
         if (num == 1) {
-            Instantiate(pawn_w, new Vector3((float)x, (float)y, 0), Quaternion.identity);
+            o = Instantiate(pawn_w, new Vector3((float)x, (float)y, 0), Quaternion.identity);
         }
         if (num == 2) {
-            Instantiate(pawn_b, new Vector3((float)x, (float)y, 0), Quaternion.identity);
+            o = Instantiate(pawn_b, new Vector3((float)x, (float)y, 0), Quaternion.identity);
         }
         if (num == 3) {
-            Instantiate(horse_w, new Vector3((float)x, (float)y, 0), Quaternion.identity);
+            o = Instantiate(horse_w, new Vector3((float)x, (float)y, 0), Quaternion.identity);
         }
         if (num == 4) {
-            Instantiate(horse_b, new Vector3((float)x, (float)y, 0), Quaternion.identity);
+            o = Instantiate(horse_b, new Vector3((float)x, (float)y, 0), Quaternion.identity);
         }
         if (num == 5) {
-            Instantiate(bishop_w, new Vector3((float)x, (float)y, 0), Quaternion.identity);
+            o = Instantiate(bishop_w, new Vector3((float)x, (float)y, 0), Quaternion.identity);
         }
         if (num == 6) {
-            Instantiate(bishop_b, new Vector3((float)x, (float)y, 0), Quaternion.identity);
+            o = Instantiate(bishop_b, new Vector3((float)x, (float)y, 0), Quaternion.identity);
         }
         if (num == 7) {
-            Instantiate(tower_w, new Vector3((float)x, (float)y, 0), Quaternion.identity);
+            o = Instantiate(tower_w, new Vector3((float)x, (float)y, 0), Quaternion.identity);
         }
         if (num == 8) {
-            Instantiate(tower_b, new Vector3((float)x, (float)y, 0), Quaternion.identity);
+            o = Instantiate(tower_b, new Vector3((float)x, (float)y, 0), Quaternion.identity);
         }
         if (num == 9) {
-            Instantiate(queen_w, new Vector3((float)x, (float)y, 0), Quaternion.identity);
+            o = Instantiate(queen_w, new Vector3((float)x, (float)y, 0), Quaternion.identity);
         }
         if (num == 10) {
-            Instantiate(queen_b, new Vector3((float)x, (float)y, 0), Quaternion.identity);
+            o = Instantiate(queen_b, new Vector3((float)x, (float)y, 0), Quaternion.identity);
         }
         if (num == 11) {
-            Instantiate(king_w, new Vector3((float)x, (float)y, 0), Quaternion.identity);
+            o = Instantiate(king_w, new Vector3((float)x, (float)y, 0), Quaternion.identity);
         }
         if (num == 12) {
-            Instantiate(king_b, new Vector3((float)x, (float)y, 0), Quaternion.identity);
+            o = Instantiate(king_b, new Vector3((float)x, (float)y, 0), Quaternion.identity);
         }
+        // Saves piece position
+        if (o) o.GetComponent<DragTransform>().SetCurPosition((float)x, (float)y);
     }
 }
