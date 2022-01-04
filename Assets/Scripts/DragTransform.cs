@@ -21,6 +21,7 @@ public class DragTransform : MonoBehaviour
     private AudioSource audioSource;
     public AudioClip soundClip;
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -69,15 +70,28 @@ public class DragTransform : MonoBehaviour
 
             // If piece outside of board limits, apply position before movement
             if (outOfBounds(mousePosition.x, mousePosition.y)) {
-                this.transform.position = new Vector2(curX, curY);
+                comeBack();
                 return;
             }
 
-            // TODO: VER SI EL USUARIO PUEDE REALIZAR EL MOVIMIENTO. SI NO, VOLVER A POSICION INICIAL
+            // Send move to game manager and wait response
+            bool doMove = false;
+            if (GetComponent<ChessPiece>().GetMoveCallback() != null) {
+                float origin = (float)Math.Round(curX) + (float)Math.Round(curY)*(-1)*8;
+                float target = (float)Math.Round(mousePosition.x) + (float)Math.Round(mousePosition.y)*(-1)*8;
+                doMove = GetComponent<ChessPiece>().GetMoveCallback()((int)origin, (int)target);
+            }
             
-            // Apply movement
-            ApplyAproxPiecePosition(mousePosition.x, mousePosition.y);
+            // Apply movement or return to origin
+            if (doMove) ApplyAproxPiecePosition(mousePosition.x, mousePosition.y);
+            else comeBack();
         }
+    }
+
+    // Returns piece to position before the move
+    private void comeBack()
+    {
+        this.transform.position = new Vector2(curX, curY);
     }
 
     // Returns true if position is out of board bounds

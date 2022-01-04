@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: -6485090518305955024}
   - component: {fileID: -7797913898128466409}
   - component: {fileID: 3990261930643166324}
+  - component: {fileID: 5223154795119911309}
   m_Layer: 0
   m_Name: Queen_white
   m_TagString: White
@@ -224,3 +225,15 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5223154795119911309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6413511233330065125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed2d93ec0ec0d4445a48b6c9b7c9364d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

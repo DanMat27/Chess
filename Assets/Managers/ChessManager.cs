@@ -41,6 +41,14 @@ public class ChessManager : MonoBehaviour
     private bool gameEnded = false;
     private int winner = 0; // 0 = nobody, 1 = user, 2 = rival
 
+    /* Move management */
+    public struct Move {
+        public int origin; // Origin board position
+        public int target; // Target board position
+    }
+    private List<Move> moves; // Contains all match movements
+
+
     /* Start is called before the first frame update */
     void Start()
     {
@@ -52,39 +60,51 @@ public class ChessManager : MonoBehaviour
         // Then, put all the pieces on the board
         x = 0;
         y = 0;
+        int cont = 0;
         if (userColor) {
             print("I am white");
             foreach (int square in squares_b_w) {
-                drawPieces(square, x, y);
+                drawPieces(square, x, y, cont);
                 x = x + 1;
                 if (x % 8 == 0){ 
                     x = 0;
                     y = y - 1;
                 }
+                cont++;
             }
         }
         else {
             print("I am black");
             foreach (int square in squares_w_b) {
-                drawPieces(square, x, y);
+                drawPieces(square, x, y, cont);
                 x = x + 1;
                 if (x % 8 == 0){ 
                     x = 0;
                     y = y - 1;
                 }
+                cont++;
             }
         }
     }
 
     /* Update is called once per frame */
+    /* Always white player starts the game */
     void Update()
     {
         
     }
 
+    /* Checks if move can be done in the current board state.
+       If true, applies movement. */
+    private bool DoMove(int origin, int target)
+    {
+        print("DO MOVE? " + origin + " --> " + target);
+        return true;
+    }
+
     /* Draws all the alive pieces of the board
        White = Even, Black = Odd */
-    void drawPieces(int num, double x, double y)
+    void drawPieces(int num, double x, double y, int pos)
     {
         GameObject o = null;
         // Instantiates pieces
@@ -125,6 +145,10 @@ public class ChessManager : MonoBehaviour
             o = Instantiate(king_b, new Vector3((float)x, (float)y, 0), Quaternion.identity);
         }
         // Saves piece position
-        if (o) o.GetComponent<DragTransform>().SetCurPosition((float)x, (float)y);
+        if (o) { 
+            o.GetComponent<DragTransform>().SetCurPosition((float)x, (float)y);
+            o.GetComponent<ChessPiece>().SetBoardPos(pos);
+            o.GetComponent<ChessPiece>().SetMoveCallback(DoMove);
+        }
     }
 }

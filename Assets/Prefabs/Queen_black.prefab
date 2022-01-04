@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 1239569923397409453}
   - component: {fileID: 3796128274576788295}
   - component: {fileID: 618374154786240130}
+  - component: {fileID: 8745329263914845309}
   m_Layer: 0
   m_Name: Queen_black
   m_TagString: Black
@@ -224,3 +225,15 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8745329263914845309
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3969761833976753207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed2d93ec0ec0d4445a48b6c9b7c9364d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

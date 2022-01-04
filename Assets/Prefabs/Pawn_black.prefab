@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5212549247716981685}
   - component: {fileID: -5603648665077690896}
   - component: {fileID: 5220316124055191934}
+  - component: {fileID: 8796208665906645576}
   m_Layer: 0
   m_Name: Pawn_black
   m_TagString: Black
@@ -224,3 +225,15 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8796208665906645576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6498013801951340695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9553fc8d07b006541ba816203f4f7752, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

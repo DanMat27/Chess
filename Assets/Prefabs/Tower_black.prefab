@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: -5136510010767018950}
   - component: {fileID: -1794917058706681075}
   - component: {fileID: 8463252870053771939}
+  - component: {fileID: 4736316503045747187}
   m_Layer: 0
   m_Name: Tower_black
   m_TagString: Black
@@ -224,3 +225,15 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4736316503045747187
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4988674473506029349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b419d997ecf4eca409241e62e7103c44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
