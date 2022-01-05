@@ -19,27 +19,11 @@ public class ChessManager : MonoBehaviour
     public GameObject queen_b;
     public GameObject king_w;
     public GameObject king_b;
-    /* Representation of the board */
-    public bool userColor; // true = white, false = black
-    private int[] squares_w_b = { 7, 3, 5, 11, 9, 5, 3, 7,
-                                  1, 1, 1, 1, 1, 1, 1, 1,
-                                  0, 0, 0, 0, 0, 0, 0, 0,
-                                  0, 0, 0, 0, 0, 0, 0, 0,
-                                  0, 0, 0, 0, 0, 0, 0, 0,
-                                  0, 0, 0, 0, 0, 0, 0, 0,
-                                  2, 2, 2, 2, 2, 2, 2, 2,
-                                  8, 4, 6, 10, 12, 6, 4, 8 };
-    private int[] squares_b_w = { 8, 4, 6, 12, 10, 6, 4, 8,
-                                  2, 2, 2, 2, 2, 2, 2, 2,
-                                  0, 0, 0, 0, 0, 0, 0, 0,
-                                  0, 0, 0, 0, 0, 0, 0, 0,
-                                  0, 0, 0, 0, 0, 0, 0, 0,
-                                  0, 0, 0, 0, 0, 0, 0, 0,
-                                  1, 1, 1, 1, 1, 1, 1, 1,
-                                  7, 3, 5, 9, 11, 5, 3, 7 };
-    /* Game variables */
-    private bool gameEnded = false;
-    private int winner = 0; // 0 = nobody, 1 = user, 2 = rival
+    private List<GameObject> chessPieces;
+    /* Game State */
+    public GameObject state;
+    /* Sound variables */
+    public AudioClip moveSound;
 
     /* Move management */
     public struct Move {
@@ -52,6 +36,11 @@ public class ChessManager : MonoBehaviour
     /* Start is called before the first frame update */
     void Start()
     {
+        chessPieces = new List<GameObject>();
+
+        // User is WHITE
+        state.GetComponent<GameState>().SetUserColor(true); 
+
         // First, create chess board
         double x = 3.5;
         double y = -0.5;
@@ -61,9 +50,9 @@ public class ChessManager : MonoBehaviour
         x = 0;
         y = 0;
         int cont = 0;
-        if (userColor) {
+        if (state.GetComponent<GameState>().GetUserColor()) {
             print("I am white");
-            foreach (int square in squares_b_w) {
+            foreach (int square in state.GetComponent<GameState>().GetBlackBoard()) {
                 drawPieces(square, x, y, cont);
                 x = x + 1;
                 if (x % 8 == 0){ 
@@ -75,7 +64,7 @@ public class ChessManager : MonoBehaviour
         }
         else {
             print("I am black");
-            foreach (int square in squares_w_b) {
+            foreach (int square in state.GetComponent<GameState>().GetWhiteBoard()) {
                 drawPieces(square, x, y, cont);
                 x = x + 1;
                 if (x % 8 == 0){ 
@@ -146,9 +135,12 @@ public class ChessManager : MonoBehaviour
         }
         // Saves piece position
         if (o) { 
-            o.GetComponent<DragTransform>().SetCurPosition((float)x, (float)y);
+            o.GetComponent<ChessPiece>().SetCurPosition((float)x, (float)y);
             o.GetComponent<ChessPiece>().SetBoardPos(pos);
             o.GetComponent<ChessPiece>().SetMoveCallback(DoMove);
+            o.GetComponent<ChessPiece>().SetAudioClip(moveSound);
+            o.GetComponent<ChessPiece>().SetBoardState(state); // Pieces have reference of current game state
+            chessPieces.Add(o);
         }
     }
 }
