@@ -29,6 +29,7 @@ public class ChessManager : MonoBehaviour
     public struct Move {
         public int origin; // Origin board position
         public int target; // Target board position
+        public bool color; // Color that moved: true = white, false = black
     }
     private List<Move> moves; // Contains all match movements
 
@@ -36,6 +37,7 @@ public class ChessManager : MonoBehaviour
     /* Start is called before the first frame update */
     void Start()
     {
+        moves = new List<Move>();
         chessPieces = new List<GameObject>();
 
         // User is WHITE
@@ -83,12 +85,19 @@ public class ChessManager : MonoBehaviour
         
     }
 
-    /* Checks if move can be done in the current board state.
-       If true, applies movement. */
-    private bool DoMove(int origin, int target)
+    /* Stores the applied move in the saved list of moves.
+       Changes the turn of the players. */
+    private void DoMove(int origin, int target, bool color)
     {
-        print("DO MOVE? " + origin + " --> " + target);
-        return true;
+        print("DO MOVE? " + origin + " --> " + target + " ## Color: " + (color ? "WHITE" : "BLACK"));
+
+        // Store move
+        Move newMove = new Move(){ origin = origin, target = target, color = color };
+        moves.Add(newMove);
+
+        // Change color turn
+        state.GetComponent<GameState>().SetUserColor(!color);
+        print(!color ? "NEW WHITE" : "NEW BLACK");
     }
 
     /* Draws all the alive pieces of the board

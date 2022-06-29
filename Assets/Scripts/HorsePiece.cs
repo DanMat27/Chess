@@ -61,7 +61,8 @@ public class HorsePiece : ChessPiece
             if (GetMoveCallback() != null) {
                 float origin = (float)Math.Round(curX) + (float)Math.Round(curY)*(-1)*8;
                 float target = (float)Math.Round(mousePosition.x) + (float)Math.Round(mousePosition.y)*(-1)*8;
-                doMove = GetMoveCallback()((int)origin, (int)target);
+                bool curPieceColor = this.tag == WHITE;
+                GetMoveCallback()((int)origin, (int)target, curPieceColor);
             }
             
             // Apply movement or return to origin

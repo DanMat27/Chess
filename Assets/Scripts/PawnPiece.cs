@@ -20,9 +20,6 @@ public class PawnPiece : ChessPiece
     void Update()
     {
         DragAndDrop();
-        if (moves.Count == 0) {
-            moves = CurrentMovements();
-        }
     }
 
     // Controls drag and drop movement of the piece
@@ -61,16 +58,22 @@ public class PawnPiece : ChessPiece
                 return;
             }
 
-            // Send move to game manager and wait response
+            // Check if piece can move to the new position
+            if (moves.Count == 0) moves = CurrentMovements();
             bool doMove = false;
-            if (GetMoveCallback() != null) {
-                float origin = (float)Math.Round(curX) + (float)Math.Round(curY)*(-1)*8;
-                float target = (float)Math.Round(mousePosition.x) + (float)Math.Round(mousePosition.y)*(-1)*8;
-                doMove = GetMoveCallback()((int)origin, (int)target);
-            }
+            float origin = (float)Math.Round(curX) + (float)Math.Round(curY)*(-1)*8;
+            float target = (float)Math.Round(mousePosition.x) + (float)Math.Round(mousePosition.y)*(-1)*8;
+            if (moves.Contains((int)target)) doMove = true;
+            moves.ForEach(p => print(p));
             
             // Apply movement or return to origin
             if (doMove) { 
+                // Send move to game manager to save it
+                if (GetMoveCallback() != null) {
+                    bool curPieceColor = this.tag == WHITE;
+                    GetMoveCallback()((int)origin, (int)target, curPieceColor);
+                }
+
                 ApplyAproxPiecePosition(mousePosition.x, mousePosition.y);
                 moves = new List<int>(); // Reset moves list
                 isFirstMove = false;
@@ -89,18 +92,46 @@ public class PawnPiece : ChessPiece
         bool userColor = boardState.GetComponent<GameState>().GetUserColor(); // Color user is playing
         bool turn = boardState.GetComponent<GameState>().GetColorTurn(); // Current turn
         bool curPieceColor = false; // Color of the current piece
-        if (this.tag == "White") curPieceColor = true;
-
+        if (this.tag == WHITE) curPieceColor = true;
+        print(turn ? "WHITE" : "BLACK");
         List<int> curMoves = new List<int>();
-        // If white turn and piece is white
-        if (curPieceColor && turn) {
+        // If white turn and piece is black
+        if (!curPieceColor && turn) {
             return curMoves;
         }
-        // If black turn and piece is black
-        if (!curPieceColor && !turn) {
+        // If black turn and piece is white
+        if (curPieceColor && !turn) {
             return curMoves;
+        }
+
+        // Calculate the current valid moves
+        if (curPieceColor) { // White
+            // Normal move
+            if (!squaresBottom.Contains(boardPos)) {
+                int move1Down = boardPos + 8;
+                curMoves.Add(move1Down);
+
+                // If first move, can move 2 up
+                if (isFirstMove) {
+                    int move2Down = boardPos + 16;
+                    curMoves.Add(move2Down);
+                }
+            }
+        }
+        else { // Black
+            // Normal move
+            if (!squaresTop.Contains(boardPos)) {
+                int move1Up = boardPos - 8;
+                curMoves.Add(move1Up);
+
+                // If first move, can move 2 up
+                if (isFirstMove) {
+                    int move2Up = boardPos - 16;
+                    curMoves.Add(move2Up);
+                }
+            }
         }
         
-        return moves;
+        return curMoves;
     }
 }
