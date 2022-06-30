@@ -59,7 +59,7 @@ public class PawnPiece : ChessPiece
             }
 
             // Check if piece can move to the new position
-            if (moves.Count == 0) moves = CurrentMovements();
+            moves = CurrentMovements();
             bool doMove = false;
             float origin = (float)Math.Round(curX) + (float)Math.Round(curY)*(-1)*8;
             float target = (float)Math.Round(mousePosition.x) + (float)Math.Round(mousePosition.y)*(-1)*8;
@@ -70,8 +70,8 @@ public class PawnPiece : ChessPiece
             if (doMove) { 
                 // Send move to game manager to save it
                 if (GetMoveCallback() != null) {
-                    bool curPieceColor = this.tag == WHITE;
-                    GetMoveCallback()((int)origin, (int)target, curPieceColor);
+                    int curPiece = (this.tag == Constants.WHITE) ? Constants.WHITE_PAWN : Constants.BLACK_PAWN;
+                    GetMoveCallback()((int)origin, (int)target, curPiece);
                 }
 
                 ApplyAproxPiecePosition(mousePosition.x, mousePosition.y);
@@ -89,11 +89,11 @@ public class PawnPiece : ChessPiece
     // Moves = [(x-9), (x-8), (x-16), (x-7)] or [(x+9), (x+8), (x+16), (x+7)]
     public override List<int> CurrentMovements() 
     {
-        bool userColor = boardState.GetComponent<GameState>().GetUserColor(); // Color user is playing
-        bool turn = boardState.GetComponent<GameState>().GetColorTurn(); // Current turn
-        bool curPieceColor = false; // Color of the current piece
-        if (this.tag == WHITE) curPieceColor = true;
-        print(turn ? "WHITE" : "BLACK");
+        bool userColor = GameState.Instance.GetUserColor(); // Color user is playing
+        bool turn = GameState.Instance.GetColorTurn(); // Current turn
+        bool curPieceColor = (this.tag == Constants.WHITE) ? true : false; // Color of the current piece
+        print(turn ? "TURN WHITE" : "TURN BLACK");
+
         List<int> curMoves = new List<int>();
         // If white turn and piece is black
         if (!curPieceColor && turn) {

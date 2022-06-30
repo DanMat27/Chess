@@ -20,8 +20,6 @@ public class ChessManager : MonoBehaviour
     public GameObject king_w;
     public GameObject king_b;
     private List<GameObject> chessPieces;
-    /* Game State */
-    public GameObject state;
     /* Sound variables */
     public AudioClip moveSound;
 
@@ -29,7 +27,7 @@ public class ChessManager : MonoBehaviour
     public struct Move {
         public int origin; // Origin board position
         public int target; // Target board position
-        public bool color; // Color that moved: true = white, false = black
+        public int piece; // Piece that moved
     }
     private List<Move> moves; // Contains all match movements
 
@@ -41,7 +39,8 @@ public class ChessManager : MonoBehaviour
         chessPieces = new List<GameObject>();
 
         // User is WHITE
-        state.GetComponent<GameState>().SetUserColor(true); 
+        // state.GetComponent<GameState>().SetUserColor(true);
+        GameState.Instance.SetUserColor(true);
 
         // First, create chess board
         double x = 3.5;
@@ -52,9 +51,11 @@ public class ChessManager : MonoBehaviour
         x = 0;
         y = 0;
         int cont = 0;
-        if (state.GetComponent<GameState>().GetUserColor()) {
+        // if (state.GetComponent<GameState>().GetUserColor()) {
+        if (GameState.Instance.GetUserColor()) {
             print("I am white");
-            foreach (int square in state.GetComponent<GameState>().GetBlackBoard()) {
+            // foreach (int square in state.GetComponent<GameState>().GetBlackBoard()) {
+            foreach (int square in GameState.Instance.GetBlackBoard()) {
                 drawPieces(square, x, y, cont);
                 x = x + 1;
                 if (x % 8 == 0){ 
@@ -66,7 +67,8 @@ public class ChessManager : MonoBehaviour
         }
         else {
             print("I am black");
-            foreach (int square in state.GetComponent<GameState>().GetWhiteBoard()) {
+            // foreach (int square in state.GetComponent<GameState>().GetWhiteBoard()) {
+            foreach (int square in GameState.Instance.GetWhiteBoard()) {
                 drawPieces(square, x, y, cont);
                 x = x + 1;
                 if (x % 8 == 0){ 
@@ -87,17 +89,19 @@ public class ChessManager : MonoBehaviour
 
     /* Stores the applied move in the saved list of moves.
        Changes the turn of the players. */
-    private void DoMove(int origin, int target, bool color)
+    private void DoMove(int origin, int target, int piece)
     {
-        print("DO MOVE? " + origin + " --> " + target + " ## Color: " + (color ? "WHITE" : "BLACK"));
+        print("DO MOVE? " + origin + " --> " + target + " ## Piece: " + piece);
 
         // Store move
-        Move newMove = new Move(){ origin = origin, target = target, color = color };
+        Move newMove = new Move(){ origin = origin, target = target, piece = piece };
         moves.Add(newMove);
 
         // Change color turn
-        state.GetComponent<GameState>().SetUserColor(!color);
-        print(!color ? "NEW WHITE" : "NEW BLACK");
+        print("bbbbbbb a" + GameState.Instance.GetColorTurn());
+        GameState.Instance.SetColorTurn(!(piece % 2 != 0));
+        print("bbbbbbb d" + GameState.Instance.GetColorTurn());
+        print(!(piece % 2 != 0) ? "NEW WHITE" : "NEW BLACK");
     }
 
     /* Draws all the alive pieces of the board
@@ -106,40 +110,40 @@ public class ChessManager : MonoBehaviour
     {
         GameObject o = null;
         // Instantiates pieces
-        if (num == 1) {
+        if (num == Constants.WHITE_PAWN) {
             o = Instantiate(pawn_w, new Vector3((float)x, (float)y, 0), Quaternion.identity);
         }
-        if (num == 2) {
+        if (num == Constants.BLACK_PAWN) {
             o = Instantiate(pawn_b, new Vector3((float)x, (float)y, 0), Quaternion.identity);
         }
-        if (num == 3) {
+        if (num == Constants.WHITE_HORSE) {
             o = Instantiate(horse_w, new Vector3((float)x, (float)y, 0), Quaternion.identity);
         }
-        if (num == 4) {
+        if (num == Constants.BLACK_HORSE) {
             o = Instantiate(horse_b, new Vector3((float)x, (float)y, 0), Quaternion.identity);
         }
-        if (num == 5) {
+        if (num == Constants.WHITE_BISHOP) {
             o = Instantiate(bishop_w, new Vector3((float)x, (float)y, 0), Quaternion.identity);
         }
-        if (num == 6) {
+        if (num == Constants.BLACK_BISHOP) {
             o = Instantiate(bishop_b, new Vector3((float)x, (float)y, 0), Quaternion.identity);
         }
-        if (num == 7) {
+        if (num == Constants.WHITE_TOWER) {
             o = Instantiate(tower_w, new Vector3((float)x, (float)y, 0), Quaternion.identity);
         }
-        if (num == 8) {
+        if (num == Constants.BLACK_TOWER) {
             o = Instantiate(tower_b, new Vector3((float)x, (float)y, 0), Quaternion.identity);
         }
-        if (num == 9) {
+        if (num == Constants.WHITE_QUEEN) {
             o = Instantiate(queen_w, new Vector3((float)x, (float)y, 0), Quaternion.identity);
         }
-        if (num == 10) {
+        if (num == Constants.BLACK_QUEEN) {
             o = Instantiate(queen_b, new Vector3((float)x, (float)y, 0), Quaternion.identity);
         }
-        if (num == 11) {
+        if (num == Constants.WHITE_KING) {
             o = Instantiate(king_w, new Vector3((float)x, (float)y, 0), Quaternion.identity);
         }
-        if (num == 12) {
+        if (num == Constants.BLACK_KING) {
             o = Instantiate(king_b, new Vector3((float)x, (float)y, 0), Quaternion.identity);
         }
         // Saves piece position
@@ -148,7 +152,6 @@ public class ChessManager : MonoBehaviour
             o.GetComponent<ChessPiece>().SetBoardPos(pos);
             o.GetComponent<ChessPiece>().SetMoveCallback(DoMove);
             o.GetComponent<ChessPiece>().SetAudioClip(moveSound);
-            o.GetComponent<ChessPiece>().SetBoardState(state); // Pieces have reference of current game state
             chessPieces.Add(o);
         }
     }

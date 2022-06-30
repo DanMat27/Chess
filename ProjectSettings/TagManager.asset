@@ -6,6 +6,7 @@ TagManager:
   tags:
   - White
   - Black
+  - GameState
   layers:
   - Default
   - TransparentFX

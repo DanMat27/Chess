@@ -61,8 +61,8 @@ public class KingPiece : ChessPiece
             if (GetMoveCallback() != null) {
                 float origin = (float)Math.Round(curX) + (float)Math.Round(curY)*(-1)*8;
                 float target = (float)Math.Round(mousePosition.x) + (float)Math.Round(mousePosition.y)*(-1)*8;
-                bool curPieceColor = this.tag == WHITE;
-                GetMoveCallback()((int)origin, (int)target, curPieceColor);
+                int curPiece = (this.tag == Constants.WHITE) ? Constants.WHITE_KING : Constants.BLACK_KING;
+                GetMoveCallback()((int)origin, (int)target, curPiece);
             }
             
             // Apply movement or return to origin

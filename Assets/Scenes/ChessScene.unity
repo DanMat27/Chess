@@ -131,6 +131,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2052504056720652163, guid: aea29802b4027d942a79d8d41ab5eb84, type: 3}
+      propertyPath: m_Icon
+      value: 
+      objectReference: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
+    - target: {fileID: 2052504056720652163, guid: aea29802b4027d942a79d8d41ab5eb84, type: 3}
       propertyPath: m_Name
       value: ChessManager
       objectReference: {fileID: 0}
@@ -148,7 +152,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2052504056720652189, guid: aea29802b4027d942a79d8d41ab5eb84, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2052504056720652189, guid: aea29802b4027d942a79d8d41ab5eb84, type: 3}
       propertyPath: m_LocalPosition.x
@@ -206,7 +210,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1500258263939501014, guid: 68115da42ab02a34fa515add5ff938d7, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1500258263939501014, guid: 68115da42ab02a34fa515add5ff938d7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -249,7 +253,19 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1500258263939501015, guid: 68115da42ab02a34fa515add5ff938d7, type: 3}
+      propertyPath: m_Icon
+      value: 
+      objectReference: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
+    - target: {fileID: 1500258263939501015, guid: 68115da42ab02a34fa515add5ff938d7, type: 3}
       propertyPath: m_Name
+      value: GameState
+      objectReference: {fileID: 0}
+    - target: {fileID: 1500258263939501015, guid: 68115da42ab02a34fa515add5ff938d7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1500258263939501015, guid: 68115da42ab02a34fa515add5ff938d7, type: 3}
+      propertyPath: m_TagString
       value: GameState
       objectReference: {fileID: 0}
     m_RemovedComponents: []

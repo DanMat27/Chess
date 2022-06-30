@@ -5,19 +5,14 @@ using UnityEngine;
 
 abstract public class ChessPiece : MonoBehaviour
 {
-    /* Constants */
-    protected const string WHITE = "White";
-    protected const string BLACK = "Black";
-
     /* Piece atributes */
     protected bool eaten = false; // true = can't move anymore
     protected int boardPos; // Current board position
 
     /* Move event */
-    public delegate void MoveCallback (int origin, int target, bool color); // Signature of move event (3 args)
+    public delegate void MoveCallback (int origin, int target, int piece); // Signature of move event (3 args)
     protected event MoveCallback onUserMove; // Move callback
     protected List<int> moves; // List of valid moves
-    protected GameObject boardState; // Current state of board and game
 
     /* Board limits */
     protected int minPos = 0;
@@ -78,18 +73,6 @@ abstract public class ChessPiece : MonoBehaviour
     public MoveCallback GetMoveCallback()
     {
         return onUserMove;
-    }
-
-    // Sets board and game state externally
-    public void SetBoardState(GameObject g)
-    {
-        boardState = g;
-    }
-
-    // Gets board and game state
-    public GameObject GetBoardState()
-    {
-        return boardState;
     }
 
     // Sets audio clip (move sound)
