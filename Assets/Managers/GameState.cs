@@ -4,28 +4,49 @@ using UnityEngine;
 
 public class GameState : MonoBehaviour
 {
+    /* Singleton instance */
+    public static GameState Instance { get; private set; }
+
     /* Representation of the board */
     protected bool userColor = true; // true = white, false = black
     protected bool colorTurn = true; // true = white, false = black
-    protected List<int> squares_w_b = new List<int>(){ 7, 3, 5, 11, 9, 5, 3, 7,
-                                                       1, 1, 1, 1, 1, 1, 1, 1,
-                                                       0, 0, 0, 0, 0, 0, 0, 0,
-                                                       0, 0, 0, 0, 0, 0, 0, 0,
-                                                       0, 0, 0, 0, 0, 0, 0, 0,
-                                                       0, 0, 0, 0, 0, 0, 0, 0,
-                                                       2, 2, 2, 2, 2, 2, 2, 2,
-                                                       8, 4, 6, 10, 12, 6, 4, 8 };
-    protected List<int> squares_b_w = new List<int>(){ 8, 4, 6, 12, 10, 6, 4, 8,
-                                                       2, 2, 2, 2, 2, 2, 2, 2,
-                                                       0, 0, 0, 0, 0, 0, 0, 0,
-                                                       0, 0, 0, 0, 0, 0, 0, 0,
-                                                       0, 0, 0, 0, 0, 0, 0, 0,
-                                                       0, 0, 0, 0, 0, 0, 0, 0,
-                                                       1, 1, 1, 1, 1, 1, 1, 1,
-                                                       7, 3, 5, 9, 11, 5, 3, 7 };
+    protected List<int> squares_w_b = new List<int>(){ 
+        Constants.WHITE_TOWER, Constants.WHITE_HORSE, Constants.WHITE_BISHOP, Constants.WHITE_KING, Constants.WHITE_QUEEN, Constants.WHITE_BISHOP, Constants.WHITE_HORSE, Constants.WHITE_TOWER,
+        Constants.WHITE_PAWN, Constants.WHITE_PAWN, Constants.WHITE_PAWN, Constants.WHITE_PAWN, Constants.WHITE_PAWN, Constants.WHITE_PAWN, Constants.WHITE_PAWN, Constants.WHITE_PAWN,
+        Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY,
+        Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY,
+        Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY,
+        Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY,
+        Constants.BLACK_PAWN, Constants.BLACK_PAWN, Constants.BLACK_PAWN, Constants.BLACK_PAWN, Constants.BLACK_PAWN, Constants.BLACK_PAWN, Constants.BLACK_PAWN, Constants.BLACK_PAWN,
+        Constants.BLACK_TOWER, Constants.BLACK_HORSE, Constants.BLACK_BISHOP, Constants.BLACK_QUEEN, Constants.BLACK_KING, Constants.BLACK_BISHOP, Constants.BLACK_HORSE, Constants.BLACK_TOWER
+    };
+    protected List<int> squares_b_w = new List<int>(){ 
+        Constants.BLACK_TOWER, Constants.BLACK_HORSE, Constants.BLACK_BISHOP, Constants.BLACK_KING, Constants.BLACK_QUEEN, Constants.BLACK_BISHOP, Constants.BLACK_HORSE, Constants.BLACK_TOWER,
+        Constants.BLACK_PAWN, Constants.BLACK_PAWN, Constants.BLACK_PAWN, Constants.BLACK_PAWN, Constants.BLACK_PAWN, Constants.BLACK_PAWN, Constants.BLACK_PAWN, Constants.BLACK_PAWN,
+        Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY,
+        Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY,
+        Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY,
+        Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY,
+        Constants.WHITE_PAWN, Constants.WHITE_PAWN, Constants.WHITE_PAWN, Constants.WHITE_PAWN, Constants.WHITE_PAWN, Constants.WHITE_PAWN, Constants.WHITE_PAWN, Constants.WHITE_PAWN,
+        Constants.WHITE_TOWER, Constants.WHITE_HORSE, Constants.WHITE_BISHOP, Constants.WHITE_QUEEN, Constants.WHITE_KING, Constants.WHITE_BISHOP, Constants.WHITE_HORSE, Constants.WHITE_TOWER
+    };
     /* Game variables */
     protected bool gameEnded = false;
     protected int winner = 0; // 0 = nobody, 1 = user, 2 = rival
+
+    // Create game state instance first
+    private void Awake() 
+    { 
+        // If there is an instance, and it's not me, delete myself.
+        if (Instance != null && Instance != this) 
+        { 
+            Destroy(this); 
+        } 
+        else 
+        { 
+            Instance = this; 
+        } 
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -43,60 +64,60 @@ public class GameState : MonoBehaviour
     // Returns chosen color by user (black or white)
     public bool GetUserColor()
     {
-        return userColor;
+        return Instance.userColor;
     }
 
     // Sets chosen color by user (black or white)
     public void SetUserColor(bool uc)
     {
-        userColor = uc;
+        Instance.userColor = uc;
     }
 
     // Returns current color turn
     public bool GetColorTurn()
     {
-        return colorTurn;
+        return Instance.colorTurn;
     }
 
     // Sets current color turn
     public void SetColorTurn(bool ct)
     {
-        colorTurn = ct;
+        Instance.colorTurn = ct;
     }
 
     // Returns if game has ended
     public bool GetGameEnded()
     {
-        return gameEnded;
+        return Instance.gameEnded;
     }
 
     // Sets end of game
     public void SetGameEnded(bool ge)
     {
-        gameEnded = ge;
+        Instance.gameEnded = ge;
     }
 
     // Returns winner of the game
     public int GetWinner()
     {
-        return winner;
+        return Instance.winner;
     }
     
     // Sets winner of the game
     public void SetWinner(int w)
     {
-        winner = w;
+        Instance.winner = w;
     }
 
     // Gets list of squares where user is black
     public List<int> GetBlackBoard()
     {
-        return squares_w_b;
+        return Instance.squares_w_b;
     }
 
     // Gets list of squares where user is white
     public List<int> GetWhiteBoard()
     {
-        return squares_b_w;
+        return Instance.squares_b_w;
     }
 }
