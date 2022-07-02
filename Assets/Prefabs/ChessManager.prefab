@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   board: {fileID: 7649933268023478003, guid: cd6780099120cac4d888f27a9dd05b4d, type: 3}
+  canMoveTile: {fileID: 3737645369266840708, guid: b108a9236dc15c945a82b234ac9ad7ef, type: 3}
   pawn_w: {fileID: 5015029408266619577, guid: 3012d5fa295880b4f8ac885fec04c3c1, type: 3}
   pawn_b: {fileID: 6498013801951340695, guid: 30ef48588b7578b4baf2bcfa01c2bbe7, type: 3}
   horse_w: {fileID: 964979329796613404, guid: b6802ae5c3188e44b88f99977348343c, type: 3}
@@ -56,5 +57,4 @@ MonoBehaviour:
   queen_b: {fileID: 3969761833976753207, guid: 47c70d41a9a007b4889754d9eb4b3ee9, type: 3}
   king_w: {fileID: 8397648770481757015, guid: bf85ab3b01ed4c2409baef949f1006f4, type: 3}
   king_b: {fileID: 4132380923485227925, guid: a4d31cbca618c1047bcd9167f1fadbb8, type: 3}
-  state: {fileID: 0}
   moveSound: {fileID: 8300000, guid: 1f37d9a85c6404344be69c00bdd82d08, type: 3}

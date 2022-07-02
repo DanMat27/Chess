@@ -45,6 +45,16 @@ public class PawnPiece : ChessPiece
         // Apply live movement to the dragged piece
         if (isDragging) {
             this.transform.position = mousePosition;
+
+            // Calculate the possible moves when dragged
+            if (!movesCalculated) {
+                moves = CurrentMovements();
+                movesCalculated = true;
+            }
+
+            // Show the possible moves of this piece on the board when dragging it
+            float curPos = (float)Math.Round(curX) + (float)Math.Round(curY)*(-1)*8;
+            GetShowMovesCallback()(moves, (int)curPos);
         }
 
         // When user drops the piece
@@ -55,11 +65,11 @@ public class PawnPiece : ChessPiece
             // If piece outside of board limits, apply position before movement
             if (outOfBounds(mousePosition.x, mousePosition.y)) {
                 comeBack();
+                cleanMoves();
                 return;
             }
 
             // Check if piece can move to the new position
-            moves = CurrentMovements();
             bool doMove = false;
             float origin = (float)Math.Round(curX) + (float)Math.Round(curY)*(-1)*8;
             float target = (float)Math.Round(mousePosition.x) + (float)Math.Round(mousePosition.y)*(-1)*8;
@@ -75,10 +85,12 @@ public class PawnPiece : ChessPiece
                 }
 
                 ApplyAproxPiecePosition(mousePosition.x, mousePosition.y);
-                moves = new List<int>(); // Reset moves list
                 isFirstMove = false;
             }
             else comeBack();
+
+            // Reset moves
+            cleanMoves();
         }
     }
 
@@ -133,5 +145,13 @@ public class PawnPiece : ChessPiece
         }
         
         return curMoves;
+    }
+
+    // Reset calculated moves list and board
+    private void cleanMoves() {
+        // Reset moves list
+        GetCleanMovesCallback()();
+        moves = new List<int>(); 
+        movesCalculated = false;
     }
 }

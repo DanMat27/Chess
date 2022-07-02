@@ -11,8 +11,13 @@ abstract public class ChessPiece : MonoBehaviour
 
     /* Move event */
     public delegate void MoveCallback (int origin, int target, int piece); // Signature of move event (3 args)
+    public delegate void ShowMovesCallback (List<int> pos_moves, int piecePos); // Signature of show board moves event (2 args)
+    public delegate void CleanMovesCallback (); // Signature of show board moves event (no args)
     protected event MoveCallback onUserMove; // Move callback
+    protected event ShowMovesCallback onShowMoves; // Show board moves callback
+    protected event CleanMovesCallback onCleanMoves; // Show board moves callback
     protected List<int> moves; // List of valid moves
+    protected bool movesCalculated = false; // Flag to know if the moves have been calculated
 
     /* Board limits */
     protected int minPos = 0;
@@ -73,6 +78,30 @@ abstract public class ChessPiece : MonoBehaviour
     public MoveCallback GetMoveCallback()
     {
         return onUserMove;
+    }
+
+    // Sets show board moves callback
+    public void SetShowMovesCallback(ShowMovesCallback callback)
+    {
+        onShowMoves += callback;
+    }
+
+    // Gets show board moves callback
+    public ShowMovesCallback GetShowMovesCallback()
+    {
+        return onShowMoves;
+    }
+
+    // Sets clean board moves callback
+    public void SetCleanMovesCallback(CleanMovesCallback callback)
+    {
+        onCleanMoves += callback;
+    }
+
+    // Gets clean board moves callback
+    public CleanMovesCallback GetCleanMovesCallback()
+    {
+        return onCleanMoves;
     }
 
     // Sets audio clip (move sound)

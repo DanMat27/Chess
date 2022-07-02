@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,7 @@ public class ChessManager : MonoBehaviour
 {
     /* Chess board */
     public GameObject board;
+    public GameObject canMoveTile;
     /* Chess pieces */
     public GameObject pawn_w;
     public GameObject pawn_b;
@@ -30,6 +32,8 @@ public class ChessManager : MonoBehaviour
         public int piece; // Piece that moved
     }
     private List<Move> moves; // Contains all match movements
+    private List<GameObject> paintMoves = new List<GameObject>(); // Contains all painted moves
+    private int prevPaintedPiece = -1; // Previous painted piece
 
 
     /* Start is called before the first frame update */
@@ -104,6 +108,38 @@ public class ChessManager : MonoBehaviour
         print(!(piece % 2 != 0) ? "NEW WHITE" : "NEW BLACK");
     }
 
+    /* Show in the current board the possible moves of a given piece */
+    private void ShowBoardMoves(List<int> pos_moves, int piecePos)
+    {
+        print("SHOW POSSIBLE MOVES!");
+        if (prevPaintedPiece != piecePos) {
+            prevPaintedPiece = piecePos;
+
+            // Destroy all painted moves if they were not yet
+            CleanBoardMoves();
+
+            // Paint the new ones
+            double x = 0;
+            double y = 0;
+            foreach (int move in pos_moves) { 
+                x = move % 8;
+                y = Math.Floor((double)(move / (-8)));
+                GameObject o = Instantiate(canMoveTile, new Vector3((float)x, (float)y, 1), Quaternion.identity);
+                paintMoves.Add(o);
+            }
+        }
+    }
+
+    /* Cleans the current board possible moves of the last piece */
+    private void CleanBoardMoves()
+    {
+        print("CLEAN POSSIBLE MOVES!");
+        foreach (GameObject move in paintMoves) {
+            Destroy(move);
+        }
+        prevPaintedPiece = -1;
+    }
+
     /* Draws all the alive pieces of the board
        White = Even, Black = Odd */
     void drawPieces(int num, double x, double y, int pos)
@@ -151,6 +187,8 @@ public class ChessManager : MonoBehaviour
             o.GetComponent<ChessPiece>().SetCurPosition((float)x, (float)y);
             o.GetComponent<ChessPiece>().SetBoardPos(pos);
             o.GetComponent<ChessPiece>().SetMoveCallback(DoMove);
+            o.GetComponent<ChessPiece>().SetShowMovesCallback(ShowBoardMoves);
+            o.GetComponent<ChessPiece>().SetCleanMovesCallback(CleanBoardMoves);
             o.GetComponent<ChessPiece>().SetAudioClip(moveSound);
             chessPieces.Add(o);
         }
