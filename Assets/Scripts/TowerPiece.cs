@@ -43,6 +43,16 @@ public class TowerPiece : ChessPiece
         // Apply live movement to the dragged piece
         if (isDragging) {
             this.transform.position = mousePosition;
+
+            // Calculate the possible moves when dragged
+            if (!movesCalculated) {
+                moves = CurrentMovements();
+                movesCalculated = true;
+            }
+
+            // Show the possible moves of this piece on the board when dragging it
+            float curPos = (float)Math.Round(curX) + (float)Math.Round(curY)*(-1)*8;
+            if (GetShowMovesCallback() != null) GetShowMovesCallback()(moves, (int)curPos);
         }
 
         // When user drops the piece
@@ -53,27 +63,80 @@ public class TowerPiece : ChessPiece
             // If piece outside of board limits, apply position before movement
             if (outOfBounds(mousePosition.x, mousePosition.y)) {
                 comeBack();
+                cleanMoves();
                 return;
             }
 
-            // Send move to game manager and wait response
+            // Check if piece can move to the new position
             bool doMove = false;
-            if (GetMoveCallback() != null) {
-                float origin = (float)Math.Round(curX) + (float)Math.Round(curY)*(-1)*8;
-                float target = (float)Math.Round(mousePosition.x) + (float)Math.Round(mousePosition.y)*(-1)*8;
-                int curPiece = (this.tag == Constants.WHITE) ? Constants.WHITE_TOWER : Constants.BLACK_TOWER;
-                GetMoveCallback()((int)origin, (int)target, curPiece);
-            }
+            float origin = (float)Math.Round(curX) + (float)Math.Round(curY)*(-1)*8;
+            float target = (float)Math.Round(mousePosition.x) + (float)Math.Round(mousePosition.y)*(-1)*8;
+            if (moves.Contains((int)target)) doMove = true;
             
             // Apply movement or return to origin
-            if (doMove) ApplyAproxPiecePosition(mousePosition.x, mousePosition.y);
+            if (doMove) { 
+                // Send move to game manager to save it
+                if (GetMoveCallback() != null) {
+                    int curPiece = (this.tag == Constants.WHITE) ? Constants.WHITE_TOWER : Constants.BLACK_TOWER;
+                    GetMoveCallback()((int)origin, (int)target, curPiece);
+                }
+
+                ApplyAproxPiecePosition(mousePosition.x, mousePosition.y);
+                boardPos = (int)target;
+            }
             else comeBack();
+
+            // Reset moves
+            cleanMoves();
         }
     }
 
-    // Returns valid moves of this piece in the current state
-    public override List<int> CurrentMovements() 
+    // Calculates valid moves of this piece in the current state
+    // Tower --> Can move horizontally and vertically without steps restrictions
+    // Moves = [(x+n), (x-n), (y+n), (y-n)]
+    public override List<int> CurrentMovements()
     {
-        return moves;
+        bool userColor = GameState.Instance.GetUserColor(); // Color user is playing
+        bool turn = GameState.Instance.GetColorTurn(); // Current turn
+        bool curPieceColor = (this.tag == Constants.WHITE) ? true : false; // Color of the current piece
+        HashSet<int> curMoves = new HashSet<int>();
+
+        // If white turn and piece is black
+        if (!curPieceColor && turn) {
+            return new List<int>(curMoves);
+        }
+        // If black turn and piece is white
+        if (curPieceColor && !turn) {
+            return new List<int>(curMoves);
+        }
+
+        // Normal move
+        if (GameState.Instance.squaresBottom.Contains(boardPos)) {
+            for (int i = 1; i <= 7; i++) {
+                int moveUp = boardPos - (8 * i);
+                curMoves.Add(moveUp);
+            }
+        }
+        else if (GameState.Instance.squaresTop.Contains(boardPos)) {
+            for (int i = 1; i <= 7; i++) {
+                int moveDown = boardPos + (8 * i);
+                curMoves.Add(moveDown);
+            }
+        }
+        
+        if (GameState.Instance.squaresLeft.Contains(boardPos)) {
+            for (int i = 1; i <= 7; i++) {
+                int moveRight = boardPos + (8 * i);
+                curMoves.Add(moveRight);
+            }
+        }
+        else if (GameState.Instance.squaresRight.Contains(boardPos)) {
+            for (int i = 1; i <= 7; i++) {
+                int moveLeft = boardPos - (8 * i);
+                curMoves.Add(moveLeft);
+            }
+        }
+
+        return new List<int>(curMoves);
     }
 }
