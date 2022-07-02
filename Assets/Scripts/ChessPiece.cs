@@ -26,10 +26,6 @@ abstract public class ChessPiece : MonoBehaviour
     protected float boundX2 = (float)7.5;
     protected float boundY1 = (float)-7.5;
     protected float boundY2 = (float)0.5;
-    protected List<int> squaresTop = new List<int>(){0, 1, 2, 3, 4, 5, 6, 7};
-    protected List<int> squaresBottom = new List<int>(){56, 57, 58, 59, 60, 61, 62, 63};
-    protected List<int> squaresLeft = new List<int>(){0, 8, 16, 24, 32, 40, 48, 56};
-    protected List<int> squaresRight = new List<int>(){7, 15, 23, 31, 39, 47, 55, 63};
 
     /* Drag&Drop atributes */
     protected Collider2D objectCollider;
@@ -159,8 +155,18 @@ abstract public class ChessPiece : MonoBehaviour
         audioSource.Play();
     }
 
+    // Reset calculated moves list and board
+    public void cleanMoves()
+    {
+        // Reset moves list
+        GetCleanMovesCallback()();
+        moves = new List<int>(); 
+        movesCalculated = false;
+    }
+
 
     // Controls drag and drop movement of the piece
+    // Contains the logic for the moves control and action
     protected abstract void DragAndDrop();
 
     // Returns squares where the piece can move to in the current position

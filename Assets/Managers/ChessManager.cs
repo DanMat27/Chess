@@ -102,16 +102,13 @@ public class ChessManager : MonoBehaviour
         moves.Add(newMove);
 
         // Change color turn
-        print("bbbbbbb a" + GameState.Instance.GetColorTurn());
         GameState.Instance.SetColorTurn(!(piece % 2 != 0));
-        print("bbbbbbb d" + GameState.Instance.GetColorTurn());
         print(!(piece % 2 != 0) ? "NEW WHITE" : "NEW BLACK");
     }
 
     /* Show in the current board the possible moves of a given piece */
     private void ShowBoardMoves(List<int> pos_moves, int piecePos)
     {
-        print("SHOW POSSIBLE MOVES!");
         if (prevPaintedPiece != piecePos) {
             prevPaintedPiece = piecePos;
 

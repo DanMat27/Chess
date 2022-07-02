@@ -30,6 +30,10 @@ public class GameState : MonoBehaviour
         Constants.WHITE_PAWN, Constants.WHITE_PAWN, Constants.WHITE_PAWN, Constants.WHITE_PAWN, Constants.WHITE_PAWN, Constants.WHITE_PAWN, Constants.WHITE_PAWN, Constants.WHITE_PAWN,
         Constants.WHITE_TOWER, Constants.WHITE_HORSE, Constants.WHITE_BISHOP, Constants.WHITE_QUEEN, Constants.WHITE_KING, Constants.WHITE_BISHOP, Constants.WHITE_HORSE, Constants.WHITE_TOWER
     };
+    public List<int> squaresTop = new List<int>(){0, 1, 2, 3, 4, 5, 6, 7};
+    public List<int> squaresBottom = new List<int>(){56, 57, 58, 59, 60, 61, 62, 63};
+    public List<int> squaresLeft = new List<int>(){0, 8, 16, 24, 32, 40, 48, 56};
+    public List<int> squaresRight = new List<int>(){7, 15, 23, 31, 39, 47, 55, 63};
     /* Game variables */
     protected bool gameEnded = false;
     protected int winner = 0; // 0 = nobody, 1 = user, 2 = rival
