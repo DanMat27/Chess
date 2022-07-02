@@ -22,7 +22,8 @@ public class PawnPiece : ChessPiece
         DragAndDrop();
     }
 
-    // Controls drag and drop movement of the piece
+    // Controls drag and drop movement of the piece 
+    // Contains the logic for the moves control and action
     protected override void DragAndDrop()
     {
         // Take mouse cursor position
@@ -54,7 +55,7 @@ public class PawnPiece : ChessPiece
 
             // Show the possible moves of this piece on the board when dragging it
             float curPos = (float)Math.Round(curX) + (float)Math.Round(curY)*(-1)*8;
-            GetShowMovesCallback()(moves, (int)curPos);
+            if (GetShowMovesCallback() != null) GetShowMovesCallback()(moves, (int)curPos);
         }
 
         // When user drops the piece
@@ -74,7 +75,6 @@ public class PawnPiece : ChessPiece
             float origin = (float)Math.Round(curX) + (float)Math.Round(curY)*(-1)*8;
             float target = (float)Math.Round(mousePosition.x) + (float)Math.Round(mousePosition.y)*(-1)*8;
             if (moves.Contains((int)target)) doMove = true;
-            moves.ForEach(p => print(p));
             
             // Apply movement or return to origin
             if (doMove) { 
@@ -85,6 +85,7 @@ public class PawnPiece : ChessPiece
                 }
 
                 ApplyAproxPiecePosition(mousePosition.x, mousePosition.y);
+                boardPos = (int)target;
                 isFirstMove = false;
             }
             else comeBack();
@@ -104,9 +105,8 @@ public class PawnPiece : ChessPiece
         bool userColor = GameState.Instance.GetUserColor(); // Color user is playing
         bool turn = GameState.Instance.GetColorTurn(); // Current turn
         bool curPieceColor = (this.tag == Constants.WHITE) ? true : false; // Color of the current piece
-        print(turn ? "TURN WHITE" : "TURN BLACK");
-
         List<int> curMoves = new List<int>();
+
         // If white turn and piece is black
         if (!curPieceColor && turn) {
             return curMoves;
@@ -119,7 +119,7 @@ public class PawnPiece : ChessPiece
         // Calculate the current valid moves
         if (curPieceColor) { // White
             // Normal move
-            if (!squaresBottom.Contains(boardPos)) {
+            if (!GameState.Instance.squaresBottom.Contains(boardPos)) {
                 int move1Down = boardPos + 8;
                 curMoves.Add(move1Down);
 
@@ -132,7 +132,7 @@ public class PawnPiece : ChessPiece
         }
         else { // Black
             // Normal move
-            if (!squaresTop.Contains(boardPos)) {
+            if (!GameState.Instance.squaresTop.Contains(boardPos)) {
                 int move1Up = boardPos - 8;
                 curMoves.Add(move1Up);
 
@@ -145,13 +145,5 @@ public class PawnPiece : ChessPiece
         }
         
         return curMoves;
-    }
-
-    // Reset calculated moves list and board
-    private void cleanMoves() {
-        // Reset moves list
-        GetCleanMovesCallback()();
-        moves = new List<int>(); 
-        movesCalculated = false;
     }
 }
