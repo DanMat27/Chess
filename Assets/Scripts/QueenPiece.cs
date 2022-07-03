@@ -92,7 +92,7 @@ public class QueenPiece : ChessPiece
     }
 
     // Returns valid moves of this piece in the current state
-    // Tower --> Can move horizontally, vertically and diagonally without steps restrictions
+    // Queen --> Can move horizontally, vertically and diagonally without steps restrictions
     // Moves = [(x+n), (x-n), (y+n), (y-n)] & [(x+n, y+n), (x-n, y-n), (x+n, y-n), (x-n, y+n)]
     public override List<int> CurrentMovements() 
     {

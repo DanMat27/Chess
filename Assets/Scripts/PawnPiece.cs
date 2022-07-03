@@ -99,7 +99,7 @@ public class PawnPiece : ChessPiece
     // Pawn --> Can move 1 up (normal move) or 1 diagonally up if another piece is there (eat piece)
     //          If can move 2 up too (first move)
     // ** up means down depending on user turn
-    // Moves = [(x-9), (x-8), (x-16), (x-7)] or [(x+9), (x+8), (x+16), (x+7)]
+    // Moves = [(y-1), (y-2), (x+1, y-1), (x-1, y-1)] or [(y+1), (y+2), (x+1, y+1), (x-1, y+1)]
     public override List<int> CurrentMovements() 
     {
         bool userColor = GameState.Instance.GetUserColor(); // Color user is playing
