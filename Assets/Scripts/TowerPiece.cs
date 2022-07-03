@@ -110,31 +110,36 @@ public class TowerPiece : ChessPiece
             return new List<int>(curMoves);
         }
 
-        // Normal move
-        if (GameState.Instance.squaresBottom.Contains(boardPos)) {
-            for (int i = 1; i <= 7; i++) {
-                int moveUp = boardPos - (8 * i);
-                curMoves.Add(moveUp);
-            }
+        // Normal move up
+        int moveUp = boardPos;
+        for (int i = 1; i <= 7; i++) {
+            if (GameState.Instance.squaresTop.Contains(moveUp)) break;
+            moveUp = boardPos - (8 * i);
+            curMoves.Add(moveUp);
         }
-        else if (GameState.Instance.squaresTop.Contains(boardPos)) {
-            for (int i = 1; i <= 7; i++) {
-                int moveDown = boardPos + (8 * i);
-                curMoves.Add(moveDown);
-            }
+
+        // Normal move down
+        int moveDown = boardPos;
+        for (int i = 1; i <= 7; i++) {
+            if (GameState.Instance.squaresBottom.Contains(moveDown)) break;
+            moveDown = boardPos + (8 * i);
+            curMoves.Add(moveDown);
         }
-        
-        if (GameState.Instance.squaresLeft.Contains(boardPos)) {
-            for (int i = 1; i <= 7; i++) {
-                int moveRight = boardPos + (8 * i);
-                curMoves.Add(moveRight);
-            }
+
+        // Normal move right
+        int moveRight = boardPos;
+        for (int i = 1; i <= 7; i++) {
+            if (GameState.Instance.squaresRight.Contains(moveRight)) break;
+            moveRight = boardPos + i;
+            curMoves.Add(moveRight);
         }
-        else if (GameState.Instance.squaresRight.Contains(boardPos)) {
-            for (int i = 1; i <= 7; i++) {
-                int moveLeft = boardPos - (8 * i);
-                curMoves.Add(moveLeft);
-            }
+
+        // Normal move left
+        int moveLeft = boardPos;
+        for (int i = 1; i <= 7; i++) {
+            if (GameState.Instance.squaresLeft.Contains(moveLeft)) break;
+            moveLeft = boardPos - i;
+            curMoves.Add(moveLeft);
         }
 
         return new List<int>(curMoves);
