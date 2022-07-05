@@ -99,6 +99,7 @@ public class TowerPiece : ChessPiece
         bool userColor = GameState.Instance.GetUserColor(); // Color user is playing
         bool turn = GameState.Instance.GetColorTurn(); // Current turn
         bool curPieceColor = (this.tag == Constants.WHITE) ? true : false; // Color of the current piece
+        List<int> friends = getFriendPiecesPositions(curPieceColor); // Positions of the other same color pieces
         HashSet<int> curMoves = new HashSet<int>();
 
         // If white turn and piece is black
@@ -115,6 +116,10 @@ public class TowerPiece : ChessPiece
         for (int i = 1; i <= 7; i++) {
             if (GameState.Instance.squaresTop.Contains(moveUp)) break;
             moveUp = boardPos - (8 * i);
+
+            // If invalid move (square occupied by a piece of the same color), stop to cut the lane of movement of this piece
+            if (friends.Contains(moveUp)) break;
+
             curMoves.Add(moveUp);
         }
 
@@ -123,6 +128,10 @@ public class TowerPiece : ChessPiece
         for (int i = 1; i <= 7; i++) {
             if (GameState.Instance.squaresBottom.Contains(moveDown)) break;
             moveDown = boardPos + (8 * i);
+
+            // If invalid move (square occupied by a piece of the same color), stop to cut the lane of movement of this piece
+            if (friends.Contains(moveDown)) break;
+
             curMoves.Add(moveDown);
         }
 
@@ -131,6 +140,10 @@ public class TowerPiece : ChessPiece
         for (int i = 1; i <= 7; i++) {
             if (GameState.Instance.squaresRight.Contains(moveRight)) break;
             moveRight = boardPos + i;
+
+            // If invalid move (square occupied by a piece of the same color), stop to cut the lane of movement of this piece
+            if (friends.Contains(moveRight)) break;
+
             curMoves.Add(moveRight);
         }
 
@@ -139,6 +152,10 @@ public class TowerPiece : ChessPiece
         for (int i = 1; i <= 7; i++) {
             if (GameState.Instance.squaresLeft.Contains(moveLeft)) break;
             moveLeft = boardPos - i;
+
+            // If invalid move (square occupied by a piece of the same color), stop to cut the lane of movement of this piece
+            if (friends.Contains(moveLeft)) break;
+
             curMoves.Add(moveLeft);
         }
 

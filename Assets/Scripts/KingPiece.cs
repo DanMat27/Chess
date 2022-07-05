@@ -142,6 +142,9 @@ public class KingPiece : ChessPiece
         int moveDownLeft = boardPos + 7;
         if (!GameState.Instance.squaresBottom.Contains(boardPos) && !GameState.Instance.squaresLeft.Contains(boardPos)) curMoves.Add(moveDownLeft);
 
-        return new List<int>(curMoves);
+        // Remove the invalid moves because of squares occupied by pieces of the same color
+        List<int> possibleMoves = removeFriendMoves(new List<int>(curMoves), curPieceColor);
+        
+        return possibleMoves;
     }
 }

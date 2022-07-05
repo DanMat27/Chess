@@ -134,6 +134,9 @@ public class HorsePiece : ChessPiece
         moveDownRight = boardPos + (2 + 8);
         if (moveDownRight < maxPos && Math.Abs(boardPos % 8 - moveDownRight % 8) <= 2) curMoves.Add(moveDownRight);
 
-        return new List<int>(curMoves);
+        // Remove the invalid moves because of squares occupied by pieces of the same color
+        List<int> possibleMoves = removeFriendMoves(new List<int>(curMoves), curPieceColor);
+        
+        return possibleMoves;
     }
 }

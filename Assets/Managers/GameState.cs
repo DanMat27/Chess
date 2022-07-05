@@ -37,6 +37,18 @@ public class GameState : MonoBehaviour
     /* Game variables */
     protected bool gameEnded = false;
     protected int winner = 0; // 0 = nobody, 1 = user, 2 = rival
+    protected List<int> curState = new List<int>(){
+        Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY,
+        Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY,
+        Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY,
+        Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY,
+        Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY,
+        Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY,
+        Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY,
+        Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY, Constants.EMPTY
+    };
+    protected int blackAlive = 16;
+    protected int whiteAlive = 16;
 
     // Create game state instance first
     private void Awake() 
@@ -123,5 +135,42 @@ public class GameState : MonoBehaviour
     public List<int> GetWhiteBoard()
     {
         return Instance.squares_b_w;
+    }
+
+    // Gets the current state of the board
+    public List<int> GetCurState()
+    {
+        return Instance.curState;
+    }
+
+    // Sets a piece or move in the current state of the board
+    public void SetCurStateWithNewMove(int origin, int target, int piece)
+    {
+        if (origin != -1) Instance.curState[origin] = Constants.EMPTY;
+        Instance.curState[target] = piece;
+    }
+
+    // Gets the number of black pieces alive right now
+    public int GetBlackAlive()
+    {
+        return Instance.blackAlive;
+    }
+    
+    // Sets the number of black pieces alive right now
+    public void SetBlackAlive(int ba)
+    {
+        Instance.blackAlive = ba;
+    }
+
+    // Gets the number of white pieces alive right now
+    public int GetWhiteAlive()
+    {
+        return Instance.whiteAlive;
+    }
+    
+    // Sets the number of white pieces alive right now
+    public void SetWhiteAlive(int wa)
+    {
+        Instance.whiteAlive = wa;
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 abstract public class ChessPiece : MonoBehaviour
@@ -164,7 +165,40 @@ abstract public class ChessPiece : MonoBehaviour
         movesCalculated = false;
     }
 
+    // Returns a list with all the positions of pieces with the same color 
+    // in the current state of the board
+    protected List<int> getFriendPiecesPositions(bool color) 
+    {
+        List<int> curBoard = GameState.Instance.GetCurState();
+        List<int> friends = new List<int>();
 
+        // Pieces alive of that color
+        int piecesAlive = 16;
+        if (color) piecesAlive = GameState.Instance.GetWhiteAlive();
+        else piecesAlive = GameState.Instance.GetBlackAlive();
+
+        int cont = 0;
+        int pos = -1;
+        foreach (int piece in curBoard) {
+            pos++;
+            if (piece == Constants.EMPTY) continue;
+            // White or Black
+            if ((color && piece % 2 != 0) || (!color && piece % 2 == 0)) { 
+                friends.Add(pos); 
+                cont++;
+            }
+            if (cont == piecesAlive) break;
+        } 
+
+        return friends;
+    }
+
+    // Removes the squares from the moves list where there is a piece of the same color
+    protected List<int> removeFriendMoves(List<int> piece_moves, bool color)
+    {
+        return piece_moves.Except(getFriendPiecesPositions(color)).ToList();
+    }
+    
     // Controls drag and drop movement of the piece
     // Contains the logic for the moves control and action
     protected abstract void DragAndDrop();

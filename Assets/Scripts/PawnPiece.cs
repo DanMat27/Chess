@@ -105,6 +105,7 @@ public class PawnPiece : ChessPiece
         bool userColor = GameState.Instance.GetUserColor(); // Color user is playing
         bool turn = GameState.Instance.GetColorTurn(); // Current turn
         bool curPieceColor = (this.tag == Constants.WHITE) ? true : false; // Color of the current piece
+        List<int> friends = getFriendPiecesPositions(curPieceColor); // Positions of the other same color pieces
         List<int> curMoves = new List<int>();
 
         // If white turn and piece is black
@@ -121,6 +122,10 @@ public class PawnPiece : ChessPiece
             // Normal move
             if (!GameState.Instance.squaresBottom.Contains(boardPos)) {
                 int move1Down = boardPos + 8;
+
+                // If invalid move (square occupied by a piece of the same color), stop to cut the lane of movement of this piece
+                if (friends.Contains(move1Down)) return curMoves;
+
                 curMoves.Add(move1Down);
 
                 // If first move, can move 2 up
@@ -134,6 +139,10 @@ public class PawnPiece : ChessPiece
             // Normal move
             if (!GameState.Instance.squaresTop.Contains(boardPos)) {
                 int move1Up = boardPos - 8;
+
+                // If invalid move (square occupied by a piece of the same color), stop to cut the lane of movement of this piece
+                if (friends.Contains(move1Up)) return curMoves;
+
                 curMoves.Add(move1Up);
 
                 // If first move, can move 2 up

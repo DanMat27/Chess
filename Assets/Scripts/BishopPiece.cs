@@ -99,6 +99,7 @@ public class BishopPiece : ChessPiece
         bool userColor = GameState.Instance.GetUserColor(); // Color user is playing
         bool turn = GameState.Instance.GetColorTurn(); // Current turn
         bool curPieceColor = (this.tag == Constants.WHITE) ? true : false; // Color of the current piece
+        List<int> friends = getFriendPiecesPositions(curPieceColor); // Positions of the other same color pieces
         HashSet<int> curMoves = new HashSet<int>();
 
         // If white turn and piece is black
@@ -116,6 +117,10 @@ public class BishopPiece : ChessPiece
             if (GameState.Instance.squaresTop.Contains(moveUpRight)) break;
             if (GameState.Instance.squaresRight.Contains(moveUpRight)) break;
             moveUpRight = moveUpRight - 7;
+
+            // If invalid move (square occupied by a piece of the same color), stop to cut the lane of movement of this piece
+            if (friends.Contains(moveUpRight)) break;
+
             curMoves.Add(moveUpRight);
         }
 
@@ -125,6 +130,10 @@ public class BishopPiece : ChessPiece
             if (GameState.Instance.squaresTop.Contains(moveUpLeft)) break;
             if (GameState.Instance.squaresLeft.Contains(moveUpLeft)) break;
             moveUpLeft = moveUpLeft - (7 + 2);
+
+            // If invalid move (square occupied by a piece of the same color), stop to cut the lane of movement of this piece
+            if (friends.Contains(moveUpLeft)) break;
+
             curMoves.Add(moveUpLeft);
         }
 
@@ -134,6 +143,10 @@ public class BishopPiece : ChessPiece
             if (GameState.Instance.squaresBottom.Contains(moveDownRight)) break;
             if (GameState.Instance.squaresRight.Contains(moveDownRight)) break;
             moveDownRight = moveDownRight + (7 + 2);
+
+            // If invalid move (square occupied by a piece of the same color), stop to cut the lane of movement of this piece
+            if (friends.Contains(moveDownRight)) break;
+
             curMoves.Add(moveDownRight);
         }
 
@@ -143,6 +156,10 @@ public class BishopPiece : ChessPiece
             if (GameState.Instance.squaresBottom.Contains(moveDownLeft)) break;
             if (GameState.Instance.squaresLeft.Contains(moveDownLeft)) break;
             moveDownLeft = moveDownLeft + 7;
+
+            // If invalid move (square occupied by a piece of the same color), stop to cut the lane of movement of this piece
+            if (friends.Contains(moveDownLeft)) break;
+
             curMoves.Add(moveDownLeft);
         }
 

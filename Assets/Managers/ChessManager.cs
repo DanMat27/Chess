@@ -100,6 +100,7 @@ public class ChessManager : MonoBehaviour
         // Store move
         Move newMove = new Move(){ origin = origin, target = target, piece = piece };
         moves.Add(newMove);
+        GameState.Instance.SetCurStateWithNewMove(origin, target, piece); // Save in the current state of the game
 
         // Change color turn
         GameState.Instance.SetColorTurn(!(piece % 2 != 0));
@@ -130,7 +131,6 @@ public class ChessManager : MonoBehaviour
     /* Cleans the current board possible moves of the last piece */
     private void CleanBoardMoves()
     {
-        print("CLEAN POSSIBLE MOVES!");
         foreach (GameObject move in paintMoves) {
             Destroy(move);
         }
@@ -187,6 +187,7 @@ public class ChessManager : MonoBehaviour
             o.GetComponent<ChessPiece>().SetShowMovesCallback(ShowBoardMoves);
             o.GetComponent<ChessPiece>().SetCleanMovesCallback(CleanBoardMoves);
             o.GetComponent<ChessPiece>().SetAudioClip(moveSound);
+            GameState.Instance.SetCurStateWithNewMove(-1, pos, num); // Save in the initial state of the game
             chessPieces.Add(o);
         }
     }
