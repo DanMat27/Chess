@@ -51,8 +51,7 @@ public class TowerPiece : ChessPiece
             }
 
             // Show the possible moves of this piece on the board when dragging it
-            float curPos = (float)Math.Round(curX) + (float)Math.Round(curY)*(-1)*8;
-            if (GetShowMovesCallback() != null) GetShowMovesCallback()(moves, (int)curPos);
+            if (GetShowMovesCallback() != null) GetShowMovesCallback()(moves, eatMoves, boardPos);
         }
 
         // When user drops the piece
@@ -120,7 +119,10 @@ public class TowerPiece : ChessPiece
             // If invalid move (square occupied by a piece of the same color), stop to cut the lane of movement of this piece
             if (friends.Contains(moveUp)) break;
 
-            curMoves.Add(moveUp);
+            // Save the moves that are possible eat moves for this piece in eat moves list
+            bool isEatMove = canBeEaten(moveUp, curPieceColor);
+            if (isEatMove){ eatMoves.Add(moveUp); break; }
+            else curMoves.Add(moveUp);
         }
 
         // Normal move down
@@ -132,7 +134,10 @@ public class TowerPiece : ChessPiece
             // If invalid move (square occupied by a piece of the same color), stop to cut the lane of movement of this piece
             if (friends.Contains(moveDown)) break;
 
-            curMoves.Add(moveDown);
+            // Save the moves that are possible eat moves for this piece in eat moves list
+            bool isEatMove = canBeEaten(moveDown, curPieceColor);
+            if (isEatMove){ eatMoves.Add(moveDown); break; }
+            else curMoves.Add(moveDown);
         }
 
         // Normal move right
@@ -144,7 +149,10 @@ public class TowerPiece : ChessPiece
             // If invalid move (square occupied by a piece of the same color), stop to cut the lane of movement of this piece
             if (friends.Contains(moveRight)) break;
 
-            curMoves.Add(moveRight);
+            // Save the moves that are possible eat moves for this piece in eat moves list
+            bool isEatMove = canBeEaten(moveRight, curPieceColor);
+            if (isEatMove){ eatMoves.Add(moveRight); break; }
+            else curMoves.Add(moveRight);
         }
 
         // Normal move left
@@ -156,9 +164,25 @@ public class TowerPiece : ChessPiece
             // If invalid move (square occupied by a piece of the same color), stop to cut the lane of movement of this piece
             if (friends.Contains(moveLeft)) break;
 
-            curMoves.Add(moveLeft);
+            // Save the moves that are possible eat moves for this piece in eat moves list
+            bool isEatMove = canBeEaten(moveLeft, curPieceColor);
+            if (isEatMove){ eatMoves.Add(moveLeft); break; }
+            else curMoves.Add(moveLeft);
         }
 
         return new List<int>(curMoves);
+    }
+
+    // Check if the square to move has an enemy piece that can be eaten
+    protected override bool canBeEaten(int move, bool curPieceColor)
+    {
+        List<int> curBoard = GameState.Instance.GetCurState();
+
+        if (curBoard[move] == Constants.EMPTY) return false;
+
+        bool moveColor = curBoard[move] % 2 == 0 ? false : true;
+        if (moveColor != curPieceColor) return true;
+
+        return false;
     }
 }

@@ -51,8 +51,7 @@ public class HorsePiece : ChessPiece
             }
 
             // Show the possible moves of this piece on the board when dragging it
-            // float curPos = (float)Math.Round(curX) + (float)Math.Round(curY)*(-1)*8;
-            if (GetShowMovesCallback() != null) GetShowMovesCallback()(moves, boardPos);
+            if (GetShowMovesCallback() != null) GetShowMovesCallback()(moves, eatMoves, boardPos);
         }
 
         // When user drops the piece
@@ -136,7 +135,28 @@ public class HorsePiece : ChessPiece
 
         // Remove the invalid moves because of squares occupied by pieces of the same color
         List<int> possibleMoves = removeFriendMoves(new List<int>(curMoves), curPieceColor);
+
+        // Remove the moves that are possible eat moves for this piece and save them in eat moves list
+        List<int> finalMoves = new List<int>();
+        foreach (int move in possibleMoves) {
+            bool isEatMove = canBeEaten(move, curPieceColor);
+            if (isEatMove) eatMoves.Add(move);
+            else finalMoves.Add(move);
+        }
         
-        return possibleMoves;
+        return finalMoves;
+    }
+
+    // Check if the square to move has an enemy piece that can be eaten
+    protected override bool canBeEaten(int move, bool curPieceColor)
+    {
+        List<int> curBoard = GameState.Instance.GetCurState();
+
+        if (curBoard[move] == Constants.EMPTY) return false;
+
+        bool moveColor = curBoard[move] % 2 == 0 ? false : true;
+        if (moveColor != curPieceColor) return true;
+
+        return false;
     }
 }

@@ -109,7 +109,7 @@ public class ChessManager : MonoBehaviour
     }
 
     /* Show in the current board the possible moves of a given piece */
-    private void ShowBoardMoves(List<int> pos_moves, int piecePos)
+    private void ShowBoardMoves(List<int> pos_moves, List<int> eat_moves, int piecePos)
     {
         if (prevPaintedPiece != piecePos) {
             prevPaintedPiece = piecePos;
@@ -117,22 +117,21 @@ public class ChessManager : MonoBehaviour
             // Destroy all painted moves if they were not yet
             CleanBoardMoves();
 
-            // Paint the new ones
-            List<int> curBoard = GameState.Instance.GetCurState();
-            bool color = (curBoard[piecePos] % 2 == 0) ? false : true;
+            // Paint the possible moves
             double x = 0;
             double y = 0;
             foreach (int move in pos_moves) { 
                 x = move % 8;
                 y = Math.Floor((double)(move / (-8)));
-                GameObject o = null;
-                bool squareColor = (curBoard[move] % 2 == 0) ? false : true;
-                if (color != squareColor && curBoard[move] != Constants.EMPTY) {
-                    o = Instantiate(eatEnemyTile, new Vector3((float)x, (float)y, 1), Quaternion.identity);
-                }
-                else {
-                    o = Instantiate(canMoveTile, new Vector3((float)x, (float)y, 1), Quaternion.identity);
-                }
+                GameObject o = Instantiate(canMoveTile, new Vector3((float)x, (float)y, 1), Quaternion.identity);
+                paintMoves.Add(o);
+            }
+
+            // Paint the possible eats
+            foreach (int move in eat_moves) {
+                x = move % 8;
+                y = Math.Floor((double)(move / (-8)));
+                GameObject o = Instantiate(eatEnemyTile, new Vector3((float)x, (float)y, 1), Quaternion.identity);
                 paintMoves.Add(o);
             }
         }
