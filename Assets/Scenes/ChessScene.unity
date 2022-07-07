@@ -154,6 +154,10 @@ PrefabInstance:
       propertyPath: canMoveTile
       value: 
       objectReference: {fileID: 3737645369266840708, guid: b108a9236dc15c945a82b234ac9ad7ef, type: 3}
+    - target: {fileID: 2052504056720652188, guid: aea29802b4027d942a79d8d41ab5eb84, type: 3}
+      propertyPath: eatEnemyTile
+      value: 
+      objectReference: {fileID: 8896683195101172885, guid: 53c2ee5b6ba2976409501a7831655bdc, type: 3}
     - target: {fileID: 2052504056720652189, guid: aea29802b4027d942a79d8d41ab5eb84, type: 3}
       propertyPath: m_RootOrder
       value: 2

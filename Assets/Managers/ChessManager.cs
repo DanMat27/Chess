@@ -8,6 +8,7 @@ public class ChessManager : MonoBehaviour
     /* Chess board */
     public GameObject board;
     public GameObject canMoveTile;
+    public GameObject eatEnemyTile;
     /* Chess pieces */
     public GameObject pawn_w;
     public GameObject pawn_b;
@@ -117,12 +118,21 @@ public class ChessManager : MonoBehaviour
             CleanBoardMoves();
 
             // Paint the new ones
+            List<int> curBoard = GameState.Instance.GetCurState();
+            bool color = (curBoard[piecePos] % 2 == 0) ? false : true;
             double x = 0;
             double y = 0;
             foreach (int move in pos_moves) { 
                 x = move % 8;
                 y = Math.Floor((double)(move / (-8)));
-                GameObject o = Instantiate(canMoveTile, new Vector3((float)x, (float)y, 1), Quaternion.identity);
+                GameObject o = null;
+                bool squareColor = (curBoard[move] % 2 == 0) ? false : true;
+                if (color != squareColor && curBoard[move] != Constants.EMPTY) {
+                    o = Instantiate(eatEnemyTile, new Vector3((float)x, (float)y, 1), Quaternion.identity);
+                }
+                else {
+                    o = Instantiate(canMoveTile, new Vector3((float)x, (float)y, 1), Quaternion.identity);
+                }
                 paintMoves.Add(o);
             }
         }

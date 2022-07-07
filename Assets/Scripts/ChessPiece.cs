@@ -193,6 +193,34 @@ abstract public class ChessPiece : MonoBehaviour
         return friends;
     }
 
+    // Returns a list with all the positions of pieces with the opposite color 
+    // in the current state of the board
+    protected List<int> getEnemyPiecesPositions(bool color) 
+    {
+        List<int> curBoard = GameState.Instance.GetCurState();
+        List<int> enemies = new List<int>();
+
+        // Pieces alive of enemy color
+        int piecesAlive = 16;
+        if (color) piecesAlive = GameState.Instance.GetBlackAlive();
+        else piecesAlive = GameState.Instance.GetWhiteAlive();
+
+        int cont = 0;
+        int pos = -1;
+        foreach (int piece in curBoard) {
+            pos++;
+            if (piece == Constants.EMPTY) continue;
+            // Black or White
+            if ((color && piece % 2 == 0) || (!color && piece % 2 != 0)) { 
+                enemies.Add(pos); 
+                cont++;
+            }
+            if (cont == piecesAlive) break;
+        } 
+
+        return enemies;
+    }
+
     // Removes the squares from the moves list where there is a piece of the same color
     protected List<int> removeFriendMoves(List<int> piece_moves, bool color)
     {

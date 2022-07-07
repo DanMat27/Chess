@@ -51,8 +51,8 @@ public class HorsePiece : ChessPiece
             }
 
             // Show the possible moves of this piece on the board when dragging it
-            float curPos = (float)Math.Round(curX) + (float)Math.Round(curY)*(-1)*8;
-            if (GetShowMovesCallback() != null) GetShowMovesCallback()(moves, (int)curPos);
+            // float curPos = (float)Math.Round(curX) + (float)Math.Round(curY)*(-1)*8;
+            if (GetShowMovesCallback() != null) GetShowMovesCallback()(moves, boardPos);
         }
 
         // When user drops the piece
