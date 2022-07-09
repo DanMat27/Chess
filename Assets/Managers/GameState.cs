@@ -49,6 +49,11 @@ public class GameState : MonoBehaviour
     };
     protected int blackAlive = 16;
     protected int whiteAlive = 16;
+    public struct Passant {
+        public int pos { get; set; }
+        public bool color { get; set; } 
+    }
+    protected Passant passant = new Passant(){ pos = -1, color = false };
 
     // Create game state instance first
     private void Awake() 
@@ -172,5 +177,26 @@ public class GameState : MonoBehaviour
     public void SetWhiteAlive(int wa)
     {
         Instance.whiteAlive = wa;
+    }
+
+    // Gets the position of the pawn piece that moved two squares last turn 
+    // -1 if none
+    public int GetPassantPosition()
+    {
+        return Instance.passant.pos;
+    }
+
+    // Gets the color of the pawn piece that moved two squares last turn
+    public bool GetPassantColor()
+    {
+        return Instance.passant.color;
+    }
+
+    // Set the position of the pawn piece that moved two squares last turn
+    // If position = -1, clean last passant
+    public void SetPassant(int position, bool color = false)
+    {
+        Instance.passant.pos = position;
+        Instance.passant.color = color;
     }
 }

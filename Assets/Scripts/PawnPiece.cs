@@ -83,6 +83,10 @@ public class PawnPiece : ChessPiece
                     GetMoveCallback()((int)origin, (int)target, curPiece);
                 }
 
+                // If moves two steps, can be eaten en passant by enemy pawn next turn
+                if (isDoubleMove((int)target)) GameState.Instance.SetPassant((int)target, (this.tag == Constants.WHITE));
+                else GameState.Instance.SetPassant(-1);
+
                 ApplyAproxPiecePosition(mousePosition.x, mousePosition.y);
                 boardPos = (int)target;
                 isFirstMove = false;
@@ -105,7 +109,12 @@ public class PawnPiece : ChessPiece
         bool turn = GameState.Instance.GetColorTurn(); // Current turn
         bool curPieceColor = (this.tag == Constants.WHITE) ? true : false; // Color of the current piece
         List<int> friends = getFriendPiecesPositions(curPieceColor); // Positions of the other same color pieces
+        List<int> enemies = getEnemyPiecesPositions(curPieceColor); // Positions of the opposite color pieces
         List<int> curMoves = new List<int>();
+        bool isLeft = false; // Current pos in the left limit
+        bool isRight = false; // Current pos in the right limit
+        bool notPassantLeft = false; // Can not eat en passant left
+        bool notPassantRight = false; // Can not eat en passant right
 
         // If white turn and piece is black
         if (!curPieceColor && turn) {
@@ -125,25 +134,51 @@ public class PawnPiece : ChessPiece
                 // Eat moves
                 int move1LeftDown = boardPos + 7;
                 int move1RightDown = boardPos + 9;
-                // If eat moves or invalid moves
-                if (!friends.Contains(move1LeftDown)) {
-                    bool isEatMove = canBeEaten(move1LeftDown, curPieceColor);
-                    if (isEatMove) eatMoves.Add(move1LeftDown);
+                if (!GameState.Instance.squaresLeft.Contains(boardPos)) {
+                    // If eat moves or invalid moves
+                    if (!friends.Contains(move1LeftDown)) {
+                        bool isEatMove = canBeEaten(move1LeftDown, curPieceColor);
+                        if (isEatMove) { eatMoves.Add(move1LeftDown); notPassantLeft = true; }
+                    }
                 }
-                if (!friends.Contains(move1RightDown)) {
-                    bool isEatMove = canBeEaten(move1RightDown, curPieceColor);
-                    if (isEatMove) eatMoves.Add(move1RightDown);
+                else isLeft = true;
+                if (!GameState.Instance.squaresRight.Contains(boardPos)) { 
+                    if (!friends.Contains(move1RightDown)) {
+                        bool isEatMove = canBeEaten(move1RightDown, curPieceColor);
+                        if (isEatMove) { eatMoves.Add(move1RightDown); notPassantRight = true; }
+                    }
                 }
-
+                else isRight = true;
+                
                 // If invalid move (square occupied by a piece of the same color), stop to cut the lane of movement of this piece
                 if (friends.Contains(move1Down)) return curMoves;
+                // If invalid move (square occupied by a piece of the opposite color), stop to cut the lane of movement of this piece
+                if (enemies.Contains(move1Down)) return curMoves;
 
                 curMoves.Add(move1Down);
 
                 // If first move, can move 2 up
                 if (isFirstMove) {
                     int move2Down = boardPos + 16;
-                    curMoves.Add(move2Down);
+                    if (!friends.Contains(move2Down) && !enemies.Contains(move2Down)) curMoves.Add(move2Down);
+                }
+
+                // En passant moves
+                int lastPassant = GameState.Instance.GetPassantPosition();
+                bool lastPassantColor = GameState.Instance.GetPassantColor();
+                if (lastPassant != -1 && lastPassantColor != curPieceColor) {
+                    if (!isLeft) {
+                        int enPassantLeft = boardPos - 1;
+                        if (enemies.Contains(enPassantLeft)) {
+                            if (!notPassantLeft) eatMoves.Add(move1LeftDown);
+                        }
+                    }
+                    if (!isRight) {
+                        int enPassantRight = boardPos + 1;
+                        if (enemies.Contains(enPassantRight)) {
+                            if (!notPassantRight) eatMoves.Add(move1RightDown);
+                        }
+                    }
                 }
             }
         }
@@ -155,25 +190,51 @@ public class PawnPiece : ChessPiece
                 // Eat moves
                 int move1LeftUp = boardPos - 9;
                 int move1RightUp = boardPos - 7;
-                // If eat moves or invalid moves
-                if (!friends.Contains(move1LeftUp)) {
-                    bool isEatMove = canBeEaten(move1LeftUp, curPieceColor);
-                    if (isEatMove) eatMoves.Add(move1LeftUp);
+                if (!GameState.Instance.squaresLeft.Contains(boardPos)) {
+                    // If eat moves or invalid moves
+                    if (!friends.Contains(move1LeftUp)) {
+                        bool isEatMove = canBeEaten(move1LeftUp, curPieceColor);
+                        if (isEatMove) { eatMoves.Add(move1LeftUp); notPassantLeft = true; }
+                    }
                 }
-                if (!friends.Contains(move1RightUp)) {
-                    bool isEatMove = canBeEaten(move1RightUp, curPieceColor);
-                    if (isEatMove) eatMoves.Add(move1RightUp);
+                else isLeft = true;
+                if (!GameState.Instance.squaresRight.Contains(boardPos)) { 
+                    if (!friends.Contains(move1RightUp)) {
+                        bool isEatMove = canBeEaten(move1RightUp, curPieceColor);
+                        if (isEatMove) { eatMoves.Add(move1RightUp); notPassantRight = true; }
+                    }
                 }
+                else isRight = true;
 
                 // If invalid move (square occupied by a piece of the same color), stop to cut the lane of movement of this piece
                 if (friends.Contains(move1Up)) return curMoves;
+                // If invalid move (square occupied by a piece of the opposite color), stop to cut the lane of movement of this piece
+                if (enemies.Contains(move1Up)) return curMoves;
 
                 curMoves.Add(move1Up);
 
                 // If first move, can move 2 up
                 if (isFirstMove) {
                     int move2Up = boardPos - 16;
-                    curMoves.Add(move2Up);
+                    if (!friends.Contains(move2Up) && !enemies.Contains(move2Up)) curMoves.Add(move2Up);
+                }
+
+                // En passant moves
+                int lastPassant = GameState.Instance.GetPassantPosition();
+                bool lastPassantColor = GameState.Instance.GetPassantColor();
+                if (lastPassant != -1 && lastPassantColor != curPieceColor) {
+                    if (!isLeft) {
+                        int enPassantLeft = boardPos - 1;
+                        if (enemies.Contains(enPassantLeft)) {
+                            if (!notPassantLeft) eatMoves.Add(move1LeftUp);
+                        }
+                    }
+                    if (!isRight) {
+                        int enPassantRight = boardPos + 1;
+                        if (enemies.Contains(enPassantRight)) {
+                            if (!notPassantRight) eatMoves.Add(move1RightUp);
+                        }
+                    }
                 }
             }
         }
@@ -191,6 +252,13 @@ public class PawnPiece : ChessPiece
         bool moveColor = curBoard[move] % 2 == 0 ? false : true;
         if (moveColor != curPieceColor) return true;
 
+        return false;
+    }
+
+    // Tells if a pawn move is an initial double step move
+    private bool isDoubleMove(int move)
+    {
+        if (move == boardPos + 16 || move == boardPos - 16) return true;
         return false;
     }
 }

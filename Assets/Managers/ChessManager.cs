@@ -28,9 +28,9 @@ public class ChessManager : MonoBehaviour
 
     /* Move management */
     public struct Move {
-        public int origin; // Origin board position
-        public int target; // Target board position
-        public int piece; // Piece that moved
+        public int origin;
+        public int target;
+        public int piece;
     }
     private List<Move> moves; // Contains all match movements
     private List<GameObject> paintMoves = new List<GameObject>(); // Contains all painted moves
