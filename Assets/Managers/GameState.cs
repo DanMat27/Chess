@@ -34,6 +34,7 @@ public class GameState : MonoBehaviour
     public List<int> squaresBottom = new List<int>(){56, 57, 58, 59, 60, 61, 62, 63};
     public List<int> squaresLeft = new List<int>(){0, 8, 16, 24, 32, 40, 48, 56};
     public List<int> squaresRight = new List<int>(){7, 15, 23, 31, 39, 47, 55, 63};
+
     /* Game variables */
     protected bool gameEnded = false;
     protected int winner = 0; // 0 = nobody, 1 = user, 2 = rival
@@ -54,6 +55,7 @@ public class GameState : MonoBehaviour
         public bool color { get; set; } 
     }
     protected Passant passant = new Passant(){ pos = -1, color = false };
+    protected bool pieceMoving = false; // If true, a piece is moving on the board currently
 
     // Create game state instance first
     private void Awake() 
@@ -198,5 +200,17 @@ public class GameState : MonoBehaviour
     {
         Instance.passant.pos = position;
         Instance.passant.color = color;
+    }
+
+    // Gets the value of the flag that tells a piece is moving on the board
+    public bool GetPieceMoving()
+    {
+        return Instance.pieceMoving;
+    }
+
+    // Set the value of the flag that tells a piece is moving on the board
+    public void SetPieceMoving(bool moving)
+    {
+        Instance.pieceMoving = moving;
     }
 }

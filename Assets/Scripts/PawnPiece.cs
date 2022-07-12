@@ -20,8 +20,10 @@ public class PawnPiece : ChessPiece
     // Update is called once per frame
     void Update()
     {
-        DragAndDrop();
-        ApplyAproxPiecePosition(toX, toY);
+        if (!eaten) {
+            if (GameState.Instance.GetPieceMoving() == false) DragAndDrop();
+            ApplyAproxPiecePosition(toX, toY);
+        }
     }
 
     // Controls drag and drop movement of the piece 
@@ -75,14 +77,14 @@ public class PawnPiece : ChessPiece
             bool doMove = false;
             float origin = (float)Math.Round(curPosition.x) + (float)Math.Round(curPosition.y)*(-1)*8;
             float target = (float)Math.Round(mousePosition.x) + (float)Math.Round(mousePosition.y)*(-1)*8;
-            if (moves.Contains((int)target)) doMove = true;
+            if (moves.Contains((int)target) || eatMoves.Contains((int)target)) doMove = true;
             
             // Apply movement or return to origin
             if (doMove) { 
                 // Send move to game manager to save it
                 if (GetMoveCallback() != null) {
                     int curPiece = (this.tag == Constants.WHITE) ? Constants.WHITE_PAWN : Constants.BLACK_PAWN;
-                    GetMoveCallback()((int)origin, (int)target, curPiece);
+                    GetMoveCallback()((int)origin, (int)target, curPiece, moves, eatMoves);
                 }
 
                 // If moves two steps, can be eaten en passant by enemy pawn next turn
@@ -91,6 +93,7 @@ public class PawnPiece : ChessPiece
 
                 // Move piece in the board
                 moving = true;
+                GameState.Instance.SetPieceMoving(true);
                 toX = (int)Math.Round(mousePosition.x);
                 toY = (int)Math.Round(mousePosition.y);
 

@@ -94,9 +94,16 @@ public class ChessManager : MonoBehaviour
 
     /* Stores the applied move in the saved list of moves.
        Changes the turn of the players. */
-    private void DoMove(int origin, int target, int piece)
+    private void DoMove(int origin, int target, int piece, List<int> pos_moves, List<int> eat_moves)
     {
         print("DO MOVE? " + origin + " --> " + target + " ## Piece: " + piece);
+        bool color = piece % 2 != 0;
+
+        // If move is an eat move, remove the eaten piece from the board
+        if (eat_moves.Contains(target)) {
+            GameObject eatenObj = getObjectPiece(target);
+            eatenObj.GetComponent<ChessPiece>().SetEaten(true, !color);
+        }
 
         // Store move
         Move newMove = new Move(){ origin = origin, target = target, piece = piece };
@@ -104,8 +111,8 @@ public class ChessManager : MonoBehaviour
         GameState.Instance.SetCurStateWithNewMove(origin, target, piece); // Save in the current state of the game
 
         // Change color turn
-        GameState.Instance.SetColorTurn(!(piece % 2 != 0));
-        print(!(piece % 2 != 0) ? "NEW WHITE" : "NEW BLACK");
+        GameState.Instance.SetColorTurn(!color);
+        print(!color ? "NEW WHITE" : "NEW BLACK");
     }
 
     /* Show in the current board the possible moves of a given piece */
@@ -148,7 +155,7 @@ public class ChessManager : MonoBehaviour
 
     /* Draws all the alive pieces of the board
        White = Even, Black = Odd */
-    void drawPieces(int num, double x, double y, int pos)
+    private void drawPieces(int num, double x, double y, int pos)
     {
         GameObject o = null;
         // Instantiates pieces
@@ -199,5 +206,15 @@ public class ChessManager : MonoBehaviour
             GameState.Instance.SetCurStateWithNewMove(-1, pos, num); // Save in the initial state of the game
             chessPieces.Add(o);
         }
+    }
+
+    // Returns the corresponding existing piece object given a position of the board
+    private GameObject getObjectPiece(int pos) {
+        foreach (var piece in chessPieces) {
+            if (pos == piece.GetComponent<ChessPiece>().GetBoardPos()) {
+                return piece;
+            }
+        }
+        return null;
     }
 }

@@ -18,7 +18,7 @@ public class TowerPiece : ChessPiece
     // Update is called once per frame
     void Update()
     {
-        DragAndDrop();
+        if (GameState.Instance.GetPieceMoving() == false) DragAndDrop();
         ApplyAproxPiecePosition(toX, toY);
     }
 
@@ -79,11 +79,12 @@ public class TowerPiece : ChessPiece
                 // Send move to game manager to save it
                 if (GetMoveCallback() != null) {
                     int curPiece = (this.tag == Constants.WHITE) ? Constants.WHITE_TOWER : Constants.BLACK_TOWER;
-                    GetMoveCallback()((int)origin, (int)target, curPiece);
+                    GetMoveCallback()((int)origin, (int)target, curPiece, moves, eatMoves);
                 }
 
                 // Move piece in the board
                 moving = true;
+                GameState.Instance.SetPieceMoving(true);
                 toX = (int)Math.Round(mousePosition.x);
                 toY = (int)Math.Round(mousePosition.y);
 

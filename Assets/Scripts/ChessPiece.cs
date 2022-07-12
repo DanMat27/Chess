@@ -11,7 +11,7 @@ abstract public class ChessPiece : MonoBehaviour
     protected int boardPos; // Current board position
 
     /* Move event */
-    public delegate void MoveCallback (int origin, int target, int piece); // Signature of move event (3 args)
+    public delegate void MoveCallback (int origin, int target, int piece, List<int> pos_moves, List<int> eat_moves); // Signature of move event (5 args)
     public delegate void ShowMovesCallback (List<int> pos_moves, List<int> eat_moves, int piecePos); // Signature of show board moves event (3 args)
     public delegate void CleanMovesCallback (); // Signature of show board moves event (no args)
     protected event MoveCallback onUserMove; // Move callback
@@ -47,9 +47,12 @@ abstract public class ChessPiece : MonoBehaviour
 
 
     // Changes eaten state externally
-    public void SetEaten(bool e)
+    public void SetEaten(bool e, bool color)
     {
         eaten = e;
+        if (color) this.transform.position = new Vector2(-1, -8);
+        else this.transform.position = new Vector2(-1, 1);
+        curPosition = this.transform.position;
     }
 
     // Returns eaten value
@@ -162,6 +165,7 @@ abstract public class ChessPiece : MonoBehaviour
         curPosition = this.transform.position;
         if (curPosition.x == target.x && curPosition.y == target.y) {
             moving = false;
+            GameState.Instance.SetPieceMoving(false);
             PlaySound(audioSource);
         }
     }
