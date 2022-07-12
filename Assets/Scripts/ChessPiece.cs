@@ -20,6 +20,8 @@ abstract public class ChessPiece : MonoBehaviour
     protected List<int> moves; // List of valid moves
     protected List<int> eatMoves = new List<int>(); // List of eat moves
     protected bool movesCalculated = false; // Flag to know if the moves have been calculated
+    protected bool moving = false; // Flag to know if the piece is moving
+    protected Vector2 curPosition; // Speed to the movement of the piece
 
     /* Board limits */
     protected int minPos = 0;
@@ -35,6 +37,9 @@ abstract public class ChessPiece : MonoBehaviour
     protected bool isDragging; // true = piece is being dragged
     protected float curX; // Current x position (before applying movement)
     protected float curY; // Current y position (before applying movement)
+    protected float toX; // Target x position (after applying movement)
+    protected float toY; // Target y position (after applying movement)
+    protected float speed = 15f; // Speed to the movement of the piece
     
     /* Sounds */
     protected AudioSource audioSource;
@@ -120,34 +125,45 @@ abstract public class ChessPiece : MonoBehaviour
     public void SetCurPosition(float x, float y)
     {
         if (outOfBounds(x, y)) return;
-        curX = x;
-        curY = y;
+        curPosition.x = x;
+        curPosition.y = y;
     }
 
 
     // Returns piece to position before the move
     protected void comeBack()
     {
-        this.transform.position = new Vector2(curX, curY);
+        this.transform.position = new Vector2(curPosition.x, curPosition.y);
     }
 
     // Returns true if position is out of board bounds
     protected bool outOfBounds(float x, float y)
     {
         if ((x < boundX1 || x > boundX2) || (y < boundY1 || y > boundY2)) {
-            this.transform.position = new Vector2(curX, curY);
+            this.transform.position = new Vector2(curPosition.x, curPosition.y);
             return true;
         }
         return false;
     }
 
     // Applies new position coords doing an approximation to center the piece
+    // This is call in the update frames of the piece, only when moving
     protected void ApplyAproxPiecePosition(float x, float y)
     {
-        curX = (float)Math.Round(x);
-        curY = (float)Math.Round(y);
-        this.transform.position = new Vector2(curX, curY);
-        PlaySound(audioSource);
+        if (!moving) return;
+        Vector2 target = new Vector2(x, y);
+
+        float distance = distanceBetweenPositions(curPosition.x, curPosition.y, target.x, target.y);
+        distance = (distance > 1f) ? distance : 2f;
+        float step = speed * Time.deltaTime * (distance/2f);
+
+        // this.transform.position = new Vector2(curX, curY);
+        this.transform.position = Vector2.MoveTowards(curPosition, target, step);
+        curPosition = this.transform.position;
+        if (curPosition.x == target.x && curPosition.y == target.y) {
+            moving = false;
+            PlaySound(audioSource);
+        }
     }
 
     /* Cambia la pieza de sonido del AudioSource */
@@ -227,6 +243,12 @@ abstract public class ChessPiece : MonoBehaviour
     protected List<int> removeFriendMoves(List<int> piece_moves, bool color)
     {
         return piece_moves.Except(getFriendPiecesPositions(color)).ToList();
+    }
+
+    // Calculates the distance between 2 positions
+    protected float distanceBetweenPositions(float x1, float y1, float x2, float y2)
+    {
+        return Math.Abs(x1 - x2) + Math.Abs(y1 - y2);
     }
     
     // Controls drag and drop movement of the piece

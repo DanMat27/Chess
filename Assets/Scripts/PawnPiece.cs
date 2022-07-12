@@ -14,12 +14,14 @@ public class PawnPiece : ChessPiece
         objectCollider = GetComponent<Collider2D>();
         isDraggable = false;
         isDragging = false;
+        curPosition = this.transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
         DragAndDrop();
+        ApplyAproxPiecePosition(toX, toY);
     }
 
     // Controls drag and drop movement of the piece 
@@ -71,7 +73,7 @@ public class PawnPiece : ChessPiece
 
             // Check if piece can move to the new position
             bool doMove = false;
-            float origin = (float)Math.Round(curX) + (float)Math.Round(curY)*(-1)*8;
+            float origin = (float)Math.Round(curPosition.x) + (float)Math.Round(curPosition.y)*(-1)*8;
             float target = (float)Math.Round(mousePosition.x) + (float)Math.Round(mousePosition.y)*(-1)*8;
             if (moves.Contains((int)target)) doMove = true;
             
@@ -87,7 +89,11 @@ public class PawnPiece : ChessPiece
                 if (isDoubleMove((int)target)) GameState.Instance.SetPassant((int)target, (this.tag == Constants.WHITE));
                 else GameState.Instance.SetPassant(-1);
 
-                ApplyAproxPiecePosition(mousePosition.x, mousePosition.y);
+                // Move piece in the board
+                moving = true;
+                toX = (int)Math.Round(mousePosition.x);
+                toY = (int)Math.Round(mousePosition.y);
+
                 boardPos = (int)target;
                 isFirstMove = false;
             }
